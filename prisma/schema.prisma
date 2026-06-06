@@ -1,0 +1,213 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  STAFF
+}
+
+enum DietType {
+  VEG
+  NON_VEG
+  EGG
+}
+
+enum MenuCategory {
+  BIRYANI
+  FRIED_RICE
+  NOODLES
+  STARTER
+  RICE
+  CURRY
+  BREAD
+  DESSERT
+  BEVERAGE
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         Role     @default(STAFF)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model MenuItem {
+  id              String       @id @default(cuid())
+  slug            String       @unique
+  name            String
+  description     String
+  longDescription String       @db.Text
+  prepNotes       String[]
+  category        MenuCategory
+  diet            DietType
+  price           Decimal      @db.Decimal(10, 2)
+  imageUrl        String
+  isAvailable     Boolean      @default(true)
+  isFeatured      Boolean      @default(false)
+  spiceLevel      Int?
+  servingSize     String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([category])
+  @@index([diet])
+  @@index([isFeatured])
+}
+
+model CateringItem {
+  id            String       @id @default(cuid())
+  slug          String       @unique
+  name          String
+  diet          DietType
+  category      MenuCategory
+  pricePerPlate Decimal      @db.Decimal(10, 2)
+  description   String
+  imageUrl      String
+  isAvailable   Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([diet])
+  @@index([category])
+}
+
+enum OrderStatus {
+  NEW
+  ACKNOWLEDGED
+  CONFIRMED
+  PREPARING
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum CateringStatus {
+  NEW
+  ACKNOWLEDGED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum SubmissionChannel {
+  WA_DEEPLINK
+  WA_CLOUD_API
+  WEB
+}
+
+model Order {
+  id                String            @id @default(cuid())
+  orderNumber       String            @unique
+  customerName      String
+  customerPhone     String
+  deliveryAddress   String            @db.Text
+  notes             String?           @db.Text
+  internalNotes     String?           @db.Text
+  status            OrderStatus       @default(NEW)
+  subtotal          Decimal           @db.Decimal(10, 2)
+  total             Decimal           @db.Decimal(10, 2)
+  channel           SubmissionChannel @default(WA_DEEPLINK)
+  whatsappMessageId String?
+  items             OrderItem[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  acknowledgedAt    DateTime?
+  deliveredAt       DateTime?
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([customerPhone])
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId String?
+  name       String
+  price      Decimal  @db.Decimal(10, 2)
+  quantity   Int
+  subtotal   Decimal  @db.Decimal(10, 2)
+  createdAt  DateTime @default(now())
+
+  @@index([orderId])
+}
+
+model CateringRequest {
+  id                String              @id @default(cuid())
+  requestNumber     String              @unique
+  customerName      String
+  customerPhone     String
+  customerEmail     String?
+  eventDate         DateTime
+  occasion          String
+  session           String
+  guestCount        Int
+  dietPreference    String
+  eventLocation     String              @db.Text
+  instructions      String?             @db.Text
+  internalNotes     String?             @db.Text
+  estimatedTotal    Decimal             @db.Decimal(10, 2)
+  status            CateringStatus      @default(NEW)
+  channel           SubmissionChannel   @default(WA_DEEPLINK)
+  whatsappMessageId String?
+  items             CateringRequestItem[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  acknowledgedAt    DateTime?
+
+  @@index([status])
+  @@index([eventDate])
+  @@index([customerPhone])
+}
+
+model CateringRequestItem {
+  id             String          @id @default(cuid())
+  requestId      String
+  request        CateringRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  cateringItemId String?
+  name           String
+  pricePerPlate  Decimal         @db.Decimal(10, 2)
+  createdAt      DateTime        @default(now())
+
+  @@index([requestId])
+}
+
+model KnowledgeChunk {
+  id        String                      @id @default(cuid())
+  source    String
+  sourceRef String?
+  title     String
+  content   String                      @db.Text
+  metadata  Json
+  embedding Unsupported("vector(1536)")?
+  createdAt DateTime                    @default(now())
+  updatedAt DateTime                    @updatedAt
+
+  @@unique([source, sourceRef])
+  @@index([source])
+}
+
+model ChatSession {
+  id           String   @id @default(cuid())
+  sessionId    String   @unique
+  messages     Json
+  ipAddress    String?
+  userAgent    String?
+  messageCount Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([sessionId])
+  @@index([createdAt])
+}

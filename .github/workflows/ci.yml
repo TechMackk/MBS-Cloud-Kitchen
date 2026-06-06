@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+          DIRECT_URL: postgresql://ci:ci@localhost:5432/ci
+
+      - name: Lint
+        run: npm run lint
+        env:
+          AUTH_SECRET: ci-build-placeholder-secret-minimum-32-chars
+          NEXTAUTH_SECRET: ci-build-placeholder-secret-minimum-32-chars
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm run test:run
+
+      - name: Build
+        run: npm run build
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+          DIRECT_URL: postgresql://ci:ci@localhost:5432/ci
+          AUTH_SECRET: ci-build-placeholder-secret-minimum-32-chars
+          NEXTAUTH_SECRET: ci-build-placeholder-secret-minimum-32-chars
+          NEXTAUTH_URL: http://localhost:3000
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: build
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: mbs_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mbs_test
+          DIRECT_URL: postgresql://postgres:postgres@localhost:5432/mbs_test
+
+      - name: Generate test fixture
+        run: npm run fixture:generate
+
+      - name: Run Playwright tests
+        run: npx playwright test --project=chromium
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mbs_test
+          DIRECT_URL: postgresql://postgres:postgres@localhost:5432/mbs_test
+          AUTH_SECRET: ci-build-placeholder-secret-minimum-32-chars
+          NEXTAUTH_SECRET: ci-build-placeholder-secret-minimum-32-chars
+          NEXTAUTH_URL: http://localhost:3000
+          TEST_ADMIN_EMAIL: admin@test.mbs.local
+          TEST_ADMIN_PASSWORD: TestAdmin123!Secure
+          ADMIN_EMAIL: admin@test.mbs.local
+          ADMIN_PASSWORD: TestAdmin123!Secure
+          ENABLE_WHATSAPP_API: "false"
+          OPENAI_API_KEY: test-key
+          CSP_REPORT_ONLY: "true"
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
