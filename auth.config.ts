@@ -1,36 +1,12 @@
 /**
- * Edge-safe Auth.js config shared by middleware and auth.ts.
- * Must not import Prisma, bcrypt, database clients, or other Node-only modules.
+ * Shared Auth.js config for auth.ts (Node runtime only).
+ * Keep free of providers and Node-only imports — providers live in auth.ts.
+ * Admin route protection is handled in middleware.ts via session cookie check.
  */
 export const authConfig = {
   pages: {
     signIn: "/admin/login",
   },
-  providers: [],
+  providers: [] as const,
   trustHost: true,
-  callbacks: {
-    authorized({
-      auth,
-      request,
-    }: {
-      auth: { user?: unknown } | null;
-      request: { nextUrl: URL };
-    }) {
-      const { pathname } = request.nextUrl;
-      const isLoggedIn = Boolean(auth?.user);
-
-      if (pathname.startsWith("/admin/login")) {
-        if (isLoggedIn) {
-          return Response.redirect(new URL("/admin", request.nextUrl));
-        }
-        return true;
-      }
-
-      if (pathname.startsWith("/admin")) {
-        return isLoggedIn;
-      }
-
-      return true;
-    },
-  },
 };
