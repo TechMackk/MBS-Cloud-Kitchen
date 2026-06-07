@@ -81,6 +81,9 @@ export async function createMenuItem(
               ? data.spiceLevel
               : null,
           servingSize: data.servingSize ?? null,
+          calories: data.calories ?? null,
+          protein: data.protein ?? null,
+          tags: data.tags,
         },
       });
     } catch (error) {
@@ -152,6 +155,9 @@ export async function updateMenuItem(
               ? data.spiceLevel
               : null,
           servingSize: data.servingSize ?? null,
+          calories: data.calories ?? null,
+          protein: data.protein ?? null,
+          tags: data.tags,
         },
       });
 

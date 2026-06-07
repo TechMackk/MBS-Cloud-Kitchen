@@ -24,6 +24,9 @@ export interface MenuItem {
   isFeatured: boolean;
   spiceLevel?: 1 | 2 | 3;
   servingSize?: string;
+  calories?: number;
+  protein?: number;
+  tags?: string[];
 }
 
 type ItemInput = {

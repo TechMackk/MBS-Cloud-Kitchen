@@ -48,6 +48,9 @@ describe("toMenuItem", () => {
       isFeatured: true,
       spiceLevel: 2,
       servingSize: "Serves 2",
+      calories: 480,
+      protein: 42,
+      tags: ["Chef Recommended", "Bestseller"],
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -58,6 +61,39 @@ describe("toMenuItem", () => {
     expect(item.category).toBe("biryani");
     expect(item.diet).toBe("non-veg");
     expect(item.spiceLevel).toBe(2);
+    expect(item.calories).toBe(480);
+    expect(item.protein).toBe(42);
+    expect(item.tags).toEqual(["Chef Recommended", "Bestseller"]);
+  });
+
+  it("omits empty nutrition and tags from mapped item", () => {
+    const row = {
+      id: "item-2",
+      slug: "plain-rice",
+      name: "Plain Rice",
+      description: "Simple rice",
+      longDescription: "Long description",
+      prepNotes: ["Steamed"],
+      category: "RICE" as const,
+      diet: "VEG" as const,
+      price: new Prisma.Decimal(99),
+      imageUrl: "https://example.com/rice.jpg",
+      isAvailable: true,
+      isFeatured: false,
+      spiceLevel: null,
+      servingSize: null,
+      calories: null,
+      protein: null,
+      tags: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const item = toMenuItem(row);
+
+    expect(item.calories).toBeUndefined();
+    expect(item.protein).toBeUndefined();
+    expect(item.tags).toBeUndefined();
   });
 });
 

@@ -102,6 +102,9 @@ export function toMenuItem(row: PrismaMenuItem): MenuItem {
         ? row.spiceLevel
         : undefined,
     servingSize: row.servingSize ?? undefined,
+    calories: row.calories ?? undefined,
+    protein: row.protein ?? undefined,
+    tags: row.tags.length > 0 ? row.tags : undefined,
   };
 }
 

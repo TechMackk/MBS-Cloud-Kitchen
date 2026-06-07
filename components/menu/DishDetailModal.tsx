@@ -16,6 +16,8 @@ import {
 import { useCartStore } from "@/lib/cart/store";
 import type { MenuItem } from "@/lib/data/menu";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/image-placeholder";
+import { getTagBadgeClasses } from "@/lib/menu/tags";
+import { cn } from "@/lib/utils";
 
 export interface DishDetailModalProps {
   item: MenuItem | null;
@@ -33,6 +35,9 @@ export function DishDetailModal({
   if (!item) {
     return null;
   }
+
+  const hasNutrition =
+    item.calories !== undefined || item.protein !== undefined;
 
   function handleAddToCart() {
     if (!item) return;
@@ -70,7 +75,7 @@ export function DishDetailModal({
             </div>
             {item.spiceLevel && (
               <span
-                className="inline-flex items-center gap-1 text-sm text-orange"
+                className="inline-flex items-center gap-1 text-sm text-red-600"
                 aria-label={`Spice level ${item.spiceLevel} of 3`}
               >
                 {Array.from({ length: item.spiceLevel }).map((_, index) => (
@@ -83,6 +88,52 @@ export function DishDetailModal({
             {item.longDescription}
           </DialogDescription>
         </DialogHeader>
+
+        {item.tags && item.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {item.tags.map((tag) => (
+              <span
+                key={tag}
+                className={cn(
+                  "rounded-full border px-3 py-1 text-xs font-medium",
+                  getTagBadgeClasses(tag),
+                )}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {hasNutrition && (
+          <div className="rounded-xl border border-green-soft/30 bg-cream/30 p-4">
+            <h3 className="mb-3 font-heading text-sm font-semibold uppercase tracking-wider text-green-deep">
+              Nutrition Per Serving
+            </h3>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {item.calories !== undefined && (
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-text/50">
+                    Calories
+                  </p>
+                  <p className="font-heading text-lg font-bold text-green-deep">
+                    {item.calories} kcal
+                  </p>
+                </div>
+              )}
+              {item.protein !== undefined && (
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-text/50">
+                    Protein
+                  </p>
+                  <p className="font-heading text-lg font-bold text-green-deep">
+                    {item.protein}g
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         <div>
           <h3 className="mb-3 font-heading text-sm font-semibold uppercase tracking-wider text-green-deep">

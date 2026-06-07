@@ -13,6 +13,7 @@ import {
   updateMenuItem,
 } from "@/app/admin/menu/actions";
 import { ImageUpload } from "@/components/admin/forms/ImageUpload";
+import { MenuTagsField } from "@/components/admin/forms/MenuTagsField";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -46,6 +47,9 @@ const formSchema = z.object({
   prepNotes: z.array(z.object({ value: z.string().min(1) })).min(1),
   spiceLevel: z.enum(["none", "1", "2", "3"]),
   servingSize: z.string().optional(),
+  calories: z.union([z.coerce.number().int().min(0), z.literal("")]).optional(),
+  protein: z.union([z.coerce.number().int().min(0), z.literal("")]).optional(),
+  tags: z.array(z.string().min(1)).max(10),
   isAvailable: z.boolean(),
   isFeatured: z.boolean(),
 });
@@ -86,6 +90,9 @@ export function MenuItemForm({ mode, initialData }: MenuItemFormProps) {
         ? String(initialData.spiceLevel) as "1" | "2" | "3"
         : "none",
       servingSize: initialData?.servingSize ?? "",
+      calories: initialData?.calories ?? "",
+      protein: initialData?.protein ?? "",
+      tags: initialData?.tags ?? [],
       isAvailable: initialData?.isAvailable ?? true,
       isFeatured: initialData?.isFeatured ?? false,
     },
@@ -124,6 +131,19 @@ export function MenuItemForm({ mode, initialData }: MenuItemFormProps) {
     );
     formData.set("spiceLevel", values.spiceLevel);
     formData.set("servingSize", values.servingSize ?? "");
+    formData.set(
+      "calories",
+      values.calories === "" || values.calories === undefined
+        ? ""
+        : String(values.calories),
+    );
+    formData.set(
+      "protein",
+      values.protein === "" || values.protein === undefined
+        ? ""
+        : String(values.protein),
+    );
+    formData.set("tags", JSON.stringify(values.tags));
     formData.set("isAvailable", String(values.isAvailable));
     formData.set("isFeatured", String(values.isFeatured));
 
@@ -318,6 +338,40 @@ export function MenuItemForm({ mode, initialData }: MenuItemFormProps) {
           {...register("servingSize")}
         />
       </div>
+
+      <div className="space-y-3 rounded-xl border border-green-soft/20 bg-cream/20 p-4">
+        <div>
+          <Label className="text-base">Nutrition (Optional)</Label>
+          <p className="mt-1 text-xs text-text/60">Leave blank if unknown</p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="calories">Calories (kcal)</Label>
+            <Input
+              id="calories"
+              type="number"
+              min={0}
+              placeholder="e.g. 480"
+              {...register("calories")}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="protein">Protein (g)</Label>
+            <Input
+              id="protein"
+              type="number"
+              min={0}
+              placeholder="e.g. 42"
+              {...register("protein")}
+            />
+          </div>
+        </div>
+      </div>
+
+      <MenuTagsField
+        value={watch("tags")}
+        onChange={(tags) => setValue("tags", tags)}
+      />
 
       <div className="space-y-2">
         <Label>Image {mode === "create" ? "*" : ""}</Label>

@@ -23,6 +23,9 @@ export const menuItemFormSchema = z.object({
     .max(10, "Maximum 10 prep notes"),
   spiceLevel: z.union([z.literal("none"), z.literal(1), z.literal(2), z.literal(3)]).optional(),
   servingSize: z.string().optional(),
+  calories: z.coerce.number().int().min(0).optional(),
+  protein: z.coerce.number().int().min(0).optional(),
+  tags: z.array(z.string().min(1)).max(10).default([]),
   isAvailable: z.coerce.boolean(),
   isFeatured: z.coerce.boolean(),
 });
@@ -67,6 +70,38 @@ export function parseMenuFormData(formData: FormData) {
     }
   }
 
+  const caloriesRaw = formData.get("calories");
+  const proteinRaw = formData.get("protein");
+  let calories: number | undefined;
+  let protein: number | undefined;
+
+  if (typeof caloriesRaw === "string" && caloriesRaw.trim() !== "") {
+    const parsedCalories = Number(caloriesRaw);
+    if (!Number.isNaN(parsedCalories) && parsedCalories >= 0) {
+      calories = Math.floor(parsedCalories);
+    }
+  }
+
+  if (typeof proteinRaw === "string" && proteinRaw.trim() !== "") {
+    const parsedProtein = Number(proteinRaw);
+    if (!Number.isNaN(parsedProtein) && parsedProtein >= 0) {
+      protein = Math.floor(parsedProtein);
+    }
+  }
+
+  const tagsRaw = formData.get("tags");
+  let tags: string[] = [];
+  if (typeof tagsRaw === "string") {
+    try {
+      const parsed: unknown = JSON.parse(tagsRaw);
+      if (Array.isArray(parsed)) {
+        tags = parsed.filter((tag): tag is string => typeof tag === "string");
+      }
+    } catch {
+      tags = [];
+    }
+  }
+
   return menuItemFormSchema.safeParse({
     name: formData.get("name"),
     slug: formData.get("slug"),
@@ -78,6 +113,9 @@ export function parseMenuFormData(formData: FormData) {
     prepNotes,
     spiceLevel,
     servingSize: formData.get("servingSize") || undefined,
+    calories,
+    protein,
+    tags,
     isAvailable: formData.get("isAvailable") === "true",
     isFeatured: formData.get("isFeatured") === "true",
   });

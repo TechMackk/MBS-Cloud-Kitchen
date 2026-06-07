@@ -56,6 +56,9 @@ model MenuItem {
   isFeatured      Boolean      @default(false)
   spiceLevel      Int?
   servingSize     String?
+  calories        Int?
+  protein         Int?
+  tags            String[]     @default([])
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
 
