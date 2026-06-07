@@ -1,4 +1,3 @@
-import { withSentryConfig } from "@sentry/nextjs";
 import bundleAnalyzer from "@next/bundle-analyzer";
 import createMDX from "@next/mdx";
 
@@ -43,21 +42,5 @@ const nextConfig = {
 const withMDX = createMDX({});
 
 const configWithMDX = withMDX(nextConfig);
-const configWithAnalyzer = withBundleAnalyzer(configWithMDX);
 
-const sentryWebpackPluginOptions = {
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
-  authToken: process.env.SENTRY_AUTH_TOKEN,
-  silent: !process.env.CI,
-  widenClientFileUpload: true,
-  hideSourceMaps: true,
-  disableLogger: true,
-  webpack: {
-    autoInstrumentMiddleware: false,
-  },
-};
-
-// Always apply withSentryConfig so instrumentationHook is enabled consistently on
-// Vercel. Edge middleware stays clean via instrumentation.ts (nodejs-only init).
-export default withSentryConfig(configWithAnalyzer, sentryWebpackPluginOptions);
+export default withBundleAnalyzer(configWithMDX);

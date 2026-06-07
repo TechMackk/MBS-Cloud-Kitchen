@@ -6,6 +6,7 @@ import type { Session, User } from "next-auth";
 import { headers } from "next/headers";
 
 import { authConfig } from "@/auth.config";
+import "@/lib/sentry/init-server";
 import { getUserByEmail, verifyPassword } from "@/lib/db/users";
 import { checkLoginRateLimit } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/utils/request-ip";
