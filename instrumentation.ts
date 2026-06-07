@@ -1,11 +1,15 @@
 export async function register() {
-  if (process.env.NEXT_RUNTIME === "nodejs") {
-    await import("./sentry.server.config");
+  // Edge middleware must never load Sentry — the edge bundle inlines this file
+  // with NEXT_RUNTIME=edge, so guard on nodejs only (no edge branch at all).
+  if (process.env.NEXT_RUNTIME !== "nodejs") {
+    return;
   }
 
-  if (process.env.NEXT_RUNTIME === "edge") {
-    await import("./sentry.edge.config");
+  if (!process.env.NEXT_PUBLIC_SENTRY_DSN) {
+    return;
   }
+
+  await import("./sentry.server.config");
 }
 
 export async function onRequestError(

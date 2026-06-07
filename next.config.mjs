@@ -45,8 +45,6 @@ const withMDX = createMDX({});
 const configWithMDX = withMDX(nextConfig);
 const configWithAnalyzer = withBundleAnalyzer(configWithMDX);
 
-const hasSentryDsn = Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN);
-
 const sentryWebpackPluginOptions = {
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
@@ -60,6 +58,6 @@ const sentryWebpackPluginOptions = {
   },
 };
 
-export default hasSentryDsn
-  ? withSentryConfig(configWithAnalyzer, sentryWebpackPluginOptions)
-  : configWithAnalyzer;
+// Always apply withSentryConfig so instrumentationHook is enabled consistently on
+// Vercel. Edge middleware stays clean via instrumentation.ts (nodejs-only init).
+export default withSentryConfig(configWithAnalyzer, sentryWebpackPluginOptions);

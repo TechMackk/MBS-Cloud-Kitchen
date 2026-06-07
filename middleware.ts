@@ -3,11 +3,8 @@ import type { NextRequest } from "next/server";
 
 /**
  * Edge middleware — imports ONLY from next/server.
- * No next-auth, no @/ path aliases, no Node.js APIs.
- * Admin gate: session cookie presence (JWT validated server-side in auth.ts).
+ * No next-auth, no @/ path aliases, no Node.js APIs, no module-level process.env.
  */
-
-const CSP_REPORT_ONLY = process.env.CSP_REPORT_ONLY === "true";
 
 const SESSION_COOKIE_NAMES = [
   "authjs.session-token",
@@ -15,8 +12,21 @@ const SESSION_COOKIE_NAMES = [
   "__Host-authjs.session-token",
 ] as const;
 
+function isCspReportOnly(): boolean {
+  return process.env.CSP_REPORT_ONLY === "true";
+}
+
 function createNonce(): string {
-  return globalThis.crypto.randomUUID().replace(/-/g, "");
+  const cryptoObj = globalThis.crypto;
+  if (cryptoObj?.randomUUID) {
+    return cryptoObj.randomUUID().replace(/-/g, "");
+  }
+
+  const bytes = new Uint8Array(16);
+  cryptoObj.getRandomValues(bytes);
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join(
+    "",
+  );
 }
 
 function buildCsp(nonce: string): string {
@@ -39,7 +49,7 @@ function buildCsp(nonce: string): string {
 
 function applySecurityHeaders(response: NextResponse, nonce: string): void {
   const csp = buildCsp(nonce);
-  const cspHeader = CSP_REPORT_ONLY
+  const cspHeader = isCspReportOnly()
     ? "Content-Security-Policy-Report-Only"
     : "Content-Security-Policy";
 
@@ -87,7 +97,7 @@ function enforceAdminAccess(request: NextRequest): NextResponse | null {
   return null;
 }
 
-export function middleware(request: NextRequest) {
+export default function middleware(request: NextRequest) {
   const nonce = createNonce();
 
   const authRedirect = enforceAdminAccess(request);
