@@ -31,6 +31,17 @@ const config: Config = {
       backgroundImage: {
         "hero-gradient":
           "linear-gradient(135deg, #F5EFD8 0%, #FFFFFF 40%, rgba(141, 186, 95, 0.15) 100%)",
+        "hero-radial":
+          "radial-gradient(ellipse at center, #F5EFD8 0%, #FFFFFF 70%)",
+      },
+      keyframes: {
+        "hero-float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+      },
+      animation: {
+        "hero-float": "hero-float 3s ease-in-out infinite",
       },
     },
   },

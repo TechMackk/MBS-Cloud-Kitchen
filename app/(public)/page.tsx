@@ -1,5 +1,5 @@
 import { JsonLd } from "@/components/seo/JsonLd";
-import { AboutSummary } from "@/components/sections/AboutSummary";
+import { WhyUs } from "@/components/sections/WhyUs";
 import { FeaturedDishes } from "@/components/sections/FeaturedDishes";
 import { Hero } from "@/components/sections/Hero";
 import { LocationPreview } from "@/components/sections/LocationPreview";
@@ -21,7 +21,7 @@ export default function HomePage() {
     <>
       <JsonLd data={getRestaurantSchema()} />
       <Hero />
-      <AboutSummary />
+      <WhyUs />
       <FeaturedDishes />
       <QualityPromise />
       <LocationPreview />
