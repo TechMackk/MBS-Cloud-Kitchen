@@ -45,7 +45,9 @@ const withMDX = createMDX({});
 const configWithMDX = withMDX(nextConfig);
 const configWithAnalyzer = withBundleAnalyzer(configWithMDX);
 
-export default withSentryConfig(configWithAnalyzer, {
+const hasSentryDsn = Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN);
+
+const sentryWebpackPluginOptions = {
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
   authToken: process.env.SENTRY_AUTH_TOKEN,
@@ -53,4 +55,11 @@ export default withSentryConfig(configWithAnalyzer, {
   widenClientFileUpload: true,
   hideSourceMaps: true,
   disableLogger: true,
-});
+  webpack: {
+    autoInstrumentMiddleware: false,
+  },
+};
+
+export default hasSentryDsn
+  ? withSentryConfig(configWithAnalyzer, sentryWebpackPluginOptions)
+  : configWithAnalyzer;
