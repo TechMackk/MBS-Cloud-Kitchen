@@ -104,6 +104,34 @@ export async function countMenuItems(
   }
 }
 
+export type HeroSatelliteDish = {
+  slug: string;
+  name: string;
+  imageUrl: string;
+};
+
+export async function getDishesBySlugs(
+  slugs: string[],
+): Promise<HeroSatelliteDish[]> {
+  if (slugs.length === 0) {
+    return [];
+  }
+
+  try {
+    const items = await prisma.menuItem.findMany({
+      where: { slug: { in: slugs } },
+      select: { slug: true, name: true, imageUrl: true },
+    });
+
+    return slugs
+      .map((slug) => items.find((item) => item.slug === slug))
+      .filter((item): item is HeroSatelliteDish => Boolean(item));
+  } catch (error) {
+    console.error("[getDishesBySlugs] failed:", error);
+    return [];
+  }
+}
+
 export async function getFeaturedMenuItems(): Promise<MenuItem[]> {
   try {
     const rows = await prisma.menuItem.findMany({
