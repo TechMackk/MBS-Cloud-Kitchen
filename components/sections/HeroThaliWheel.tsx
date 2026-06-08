@@ -4,7 +4,6 @@ import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useMemo, useState } from "react";
 
-import { Logo } from "@/components/layout/Logo";
 import type { HeroSatelliteDish } from "@/lib/db/menu";
 
 function MbsMonogram() {
@@ -71,7 +70,6 @@ export function HeroThaliWheel({
       <div
         className="relative"
         style={{ width: dims.outer, height: dims.outer }}
-        aria-hidden="true"
       >
         <div
           className="absolute inset-0 rounded-full"
@@ -79,20 +77,32 @@ export function HeroThaliWheel({
             background:
               "radial-gradient(circle at center, rgba(212,175,55,0.18) 0%, rgba(212,175,55,0.00) 66%)",
           }}
+          aria-hidden="true"
         />
 
         <div
-          className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-[3px] border-gold-primary bg-royal-bg-secondary/95"
+          className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-hidden rounded-full border-[3px] border-gold-primary bg-royal-bg-secondary/95"
           style={{ width: dims.central, height: dims.central }}
         >
-          <div className="flex flex-col items-center justify-center gap-2 text-center">
-            <Logo
-              className="h-12 w-12 !rounded-full !bg-royal-bg-secondary !text-cream-warm"
-              imageClassName="rounded-full"
+          <div
+            className="relative"
+            style={{
+              width: Math.round(dims.central * 0.9),
+              height: Math.round(dims.central * 0.9),
+            }}
+          >
+            <Image
+              src="/logo-badge.png"
+              alt="MBS Cloud Kitchen"
+              fill
+              priority
+              sizes={
+                mode === "desktop"
+                  ? "(max-width: 1024px) 40vw, 232px"
+                  : "(max-width: 1024px) 40vw, 168px"
+              }
+              className="object-contain"
             />
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-gold-light">
-              MIND &bull; BODY &bull; SOUL
-            </p>
           </div>
         </div>
 
