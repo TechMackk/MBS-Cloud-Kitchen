@@ -50,19 +50,22 @@ const CATEGORIES = [
 export function SmartCategories() {
   return (
     <section
-      className="bg-cream/20 py-16 sm:py-20"
-      aria-labelledby="smart-categories-heading"
+      className="relative overflow-hidden bg-royal-bg-primary py-16 sm:py-20"
+      aria-labelledby="category-tiles-heading"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-10">
+        <div className="mb-10 text-center sm:text-left">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-primary sm:text-sm">
+            Category Tiles
+          </p>
           <h2
-            id="smart-categories-heading"
-            className="font-heading text-3xl font-bold text-green-deep sm:text-4xl"
+            id="category-tiles-heading"
+            className="mt-3 font-heading text-3xl font-bold text-cream-warm sm:text-4xl"
           >
-            Smart Food Categories
+            Browse by Category
           </h2>
           <div
-            className="mt-3 h-1 w-16 rounded-full bg-green-soft"
+            className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-gold-primary/80 to-transparent sm:mx-0"
             aria-hidden="true"
           />
         </div>
@@ -74,15 +77,24 @@ export function SmartCategories() {
               <Link
                 key={category.id}
                 href={category.href}
-                className="group flex min-w-0 flex-col items-center rounded-2xl border border-green-soft/20 bg-white px-2 py-4 text-center shadow-sm transition-all duration-300 hover:border-green-neon/50 hover:shadow-glow-card-neon sm:px-4 sm:py-5"
+                className="group relative flex min-w-0 flex-col items-center justify-center overflow-hidden rounded-2xl border border-gold-dark/40 bg-royal-bg-secondary px-2 py-5 text-center transition-all duration-300 hover:border-gold-primary hover:shadow-[0_0_20px_rgba(212,175,55,0.22)] sm:px-3 sm:py-6"
+                style={{ aspectRatio: "4 / 5" }}
               >
-                <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full border border-transparent bg-cream transition-all duration-300 group-hover:border-green-neon group-hover:shadow-glow-green-neon sm:mb-3 sm:h-16 sm:w-16">
-                  <Icon
-                    className="h-5 w-5 text-green-deep motion-safe:animate-neon-pulse-subtle sm:h-7 sm:w-7"
-                    aria-hidden="true"
-                  />
-                </div>
-                <span className="text-xs font-medium leading-tight text-green-deep sm:text-sm">
+                <span
+                  className="pointer-events-none absolute left-0 top-0 h-0 w-0 border-b-[28px] border-r-[28px] border-b-transparent border-r-gold-primary/35"
+                  aria-hidden="true"
+                />
+                <span
+                  className="pointer-events-none absolute bottom-0 right-0 h-0 w-0 border-l-[28px] border-t-[28px] border-l-transparent border-t-gold-primary/35"
+                  aria-hidden="true"
+                />
+
+                <Icon
+                  className="mb-3 h-12 w-12 text-gold-primary sm:mb-4 sm:h-16 sm:w-16"
+                  aria-hidden="true"
+                  strokeWidth={1.25}
+                />
+                <span className="text-xs font-medium leading-tight text-cream-warm sm:text-sm">
                   {category.label}
                 </span>
               </Link>

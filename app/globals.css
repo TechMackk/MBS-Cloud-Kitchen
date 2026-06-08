@@ -9,7 +9,7 @@
   }
 
   body {
-    @apply overflow-x-hidden bg-bg text-text antialiased;
+    @apply overflow-x-hidden bg-bg text-text antialiased transition-colors duration-300;
   }
 
   h1,
@@ -90,8 +90,74 @@
     --feast-accent: #dc2626;
     --feast-bg: #fffdf7;
     --feast-text: #1f2937;
-    background-color: var(--feast-bg);
-    color: var(--feast-text);
+    /* Phase 11A: Royal dark background for the homepage only */
+    background-color: #0B0908; /* royal-bg-primary */
+    color: #F5E6C8; /* cream-warm */
+    min-height: 100%;
+  }
+
+  /* Phase 11A: Royal dark focus rings (override Tailwind ring color var) */
+  .home-feast :focus-visible,
+  .royal-header :focus-visible,
+  .royal-footer :focus-visible {
+    --tw-ring-color: #D4AF37 !important; /* gold-primary */
+  }
+
+  /* Phase 11A: Header cart icon color fixes (CartIcon stays logic-identical) */
+  .royal-header .text-green-deep {
+    color: #F5E6C8 !important; /* cream-warm */
+  }
+  .royal-header .hover\:bg-cream:hover {
+    background-color: rgba(42, 31, 24, 0.75) !important; /* royal-bg-tertiary */
+  }
+
+  /* Phase 11A: Architectural texture + vignette for hero/footer */
+  .royal-arch-pattern {
+    background-image:
+      repeating-linear-gradient(
+        45deg,
+        rgba(212, 175, 55, 0.12) 0px,
+        rgba(212, 175, 55, 0.12) 1px,
+        transparent 1px,
+        transparent 10px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        rgba(212, 175, 55, 0.08) 0px,
+        rgba(212, 175, 55, 0.08) 1px,
+        transparent 1px,
+        transparent 12px
+      );
+    opacity: 0.16;
+    mask-image: radial-gradient(circle at 50% 20%, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 70%);
+  }
+
+  .royal-vignette {
+    background:
+      radial-gradient(
+        ellipse at top left,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.28) 55%,
+        rgba(0, 0, 0, 0.65) 100%
+      ),
+      radial-gradient(
+        ellipse at top right,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.28) 55%,
+        rgba(0, 0, 0, 0.65) 100%
+      ),
+      radial-gradient(
+        ellipse at bottom left,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.24) 55%,
+        rgba(0, 0, 0, 0.6) 100%
+      ),
+      radial-gradient(
+        ellipse at bottom right,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.24) 55%,
+        rgba(0, 0, 0, 0.6) 100%
+      );
   }
 
   .feast-btn-primary {
@@ -158,6 +224,28 @@
       color-mix(in srgb, var(--feast-primary) 40%, transparent),
       color-mix(in srgb, var(--feast-secondary) 50%, transparent)
     );
+  }
+
+  /* Hero image frame + fallback (hotfix) */
+  .hero-image-frame {
+    background-color: var(--feast-bg);
+  }
+
+  .hero-image-fallback {
+    z-index: 1;
+    background:
+      radial-gradient(
+        circle at 75% 20%,
+        color-mix(in srgb, var(--feast-primary) 35%, transparent) 0%,
+        transparent 55%
+      ),
+      linear-gradient(
+        145deg,
+        var(--feast-secondary) 0%,
+        color-mix(in srgb, var(--feast-secondary) 70%, var(--feast-primary)) 45%,
+        color-mix(in srgb, var(--feast-accent) 55%, var(--feast-secondary)) 100%
+      );
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
   }
 
   /* CSS-only hero steam (Phase B) */

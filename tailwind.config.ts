@@ -18,6 +18,15 @@ const config: Config = {
         cream: "#F5EFD8",
         bg: "#FFFFFF",
         text: "#1A1A1A",
+        // Phase 11A: Royal Premium Dark theme (home only)
+        "royal-bg-primary": "#0B0908",
+        "royal-bg-secondary": "#1A1410",
+        "royal-bg-tertiary": "#2A1F18",
+        "gold-primary": "#D4AF37",
+        "gold-light": "#F0D87A",
+        "gold-dark": "#8B6F1F",
+        "cream-warm": "#F5E6C8",
+        "red-royal": "#B83227",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],

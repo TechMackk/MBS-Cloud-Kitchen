@@ -1,16 +1,8 @@
 import { JsonLd } from "@/components/seo/JsonLd";
 import { CateringCTA } from "@/components/sections/CateringCTA";
-import { FeaturedDishes } from "@/components/sections/FeaturedDishes";
 import { Hero } from "@/components/sections/Hero";
-import { LocationPreview } from "@/components/sections/LocationPreview";
-import {
-  CustomerReviews,
-  FestivalBanner,
-  FinalCTA,
-  FoodJourneyTimeline,
-  MindBodySoul,
-  WhyMBS,
-} from "@/components/sections/home";
+import { SignatureSpecials } from "@/components/sections/SignatureSpecials";
+import { SmartCategories } from "@/components/sections/SmartCategories";
 import { buildMetadata } from "@/lib/seo";
 import { getRestaurantSchema } from "@/lib/seo/structured-data";
 
@@ -29,17 +21,9 @@ export default function HomePage() {
       <JsonLd data={getRestaurantSchema()} />
 
       <Hero />
-      <MindBodySoul />
-      <FeaturedDishes />
-      <FoodJourneyTimeline />
-      <WhyMBS />
-      <CustomerReviews />
+      <SignatureSpecials />
+      <SmartCategories />
       <CateringCTA />
-      <FinalCTA />
-      <LocationPreview />
-
-      {/* Phase D2 skeleton — not rendered until festival config is active */}
-      <FestivalBanner />
     </div>
   );
 }
