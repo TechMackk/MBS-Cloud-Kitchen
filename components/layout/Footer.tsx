@@ -70,11 +70,11 @@ function FooterColumn({
     <div
       className={
         withBorder
-          ? "lg:border-r lg:border-green-soft/30 lg:pr-6 xl:pr-8"
-          : undefined
+          ? "min-w-0 lg:border-r lg:border-green-soft/30 lg:pr-6 xl:pr-8"
+          : "min-w-0"
       }
     >
-      <h3 className="mb-4 font-heading text-base font-semibold text-orange">
+      <h3 className="mb-4 font-heading text-base font-semibold text-orange-neon">
         {title}
       </h3>
       {children}
@@ -84,14 +84,14 @@ function FooterColumn({
 
 export function Footer() {
   return (
-    <footer className="mt-auto bg-green-deep text-cream">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-8">
-          <div className="lg:border-r lg:border-green-soft/30 lg:pr-6 xl:pr-8">
+    <footer className="mt-auto overflow-hidden bg-green-deep text-cream">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-5 lg:gap-8">
+          <div className="min-w-0 lg:border-r lg:border-green-soft/30 lg:pr-6 xl:pr-8">
             <div className="space-y-4">
               <Logo className="h-10 w-10 text-xs" />
               <p className="text-sm font-medium">Healthy Telangana Foods</p>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
                   <a
                     key={label}
@@ -100,10 +100,10 @@ export function Footer() {
                     rel={
                       href.startsWith("http") ? "noopener noreferrer" : undefined
                     }
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-green-soft text-green-deep transition-colors hover:bg-orange hover:text-white"
+                    className="neon-social-hover flex h-8 w-8 items-center justify-center rounded-full bg-green-soft text-green-deep hover:bg-orange hover:text-white sm:h-9 sm:w-9"
                     aria-label={label}
                   >
-                    <Icon className="h-4 w-4" aria-hidden="true" />
+                    <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
                   </a>
                 ))}
               </div>
@@ -174,7 +174,9 @@ export function Footer() {
                   aria-label="Email hello@mbscloudkitchen.in"
                 >
                   <Mail className="h-4 w-4 shrink-0 text-orange" aria-hidden="true" />
-                  <span>hello@mbscloudkitchen.in</span>
+                  <span className="break-all sm:break-normal">
+                    hello@mbscloudkitchen.in
+                  </span>
                 </a>
               </li>
               <li className="flex items-start gap-2">
@@ -186,7 +188,7 @@ export function Footer() {
               </li>
             </ul>
 
-            <div className="mt-6 rounded-2xl border border-orange/30 bg-green-deep p-5 shadow-lg">
+            <div className="mt-6 w-full min-w-0 rounded-2xl border border-orange/30 bg-green-deep p-4 shadow-lg sm:p-5 lg:mt-6">
               <h4 className="font-heading text-lg font-bold text-orange">
                 Craving Something?
               </h4>
@@ -198,7 +200,7 @@ export function Footer() {
                   asChild
                   variant="default"
                   size="sm"
-                  className="w-full sm:w-auto lg:w-full xl:w-auto"
+                  className="neon-btn-orange w-full sm:w-auto lg:w-full xl:w-auto"
                 >
                   <a href={`tel:${CONTACT.callPrimaryRaw}`}>
                     {CONTACT.callPrimary}
@@ -228,11 +230,11 @@ export function Footer() {
       </div>
 
       <div className="border-t border-green-soft/20">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-sm text-cream/80 sm:flex-row sm:px-6 lg:px-8">
-          <p>
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-center text-sm text-cream/80 sm:flex-row sm:px-6 sm:text-left lg:px-8">
+          <p className="min-w-0">
             &copy; 2026 {SITE.name}. All Rights Reserved.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <Link
               href="#"
               className="transition-colors hover:text-orange"

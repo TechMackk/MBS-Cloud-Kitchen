@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { Flame } from "lucide-react";
-import { toast } from "sonner";
 
+import { DishQuantityStepper } from "@/components/cart/DishQuantityStepper";
 import { VegBadge } from "@/components/menu/VegBadge";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { showAddedToCartToast } from "@/lib/cart/toast";
 import { useCartStore } from "@/lib/cart/store";
 import type { MenuItem } from "@/lib/data/menu";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/image-placeholder";
@@ -53,19 +54,19 @@ function NutritionStrip({
 }) {
   return (
     <div className="mt-3 grid grid-cols-2 overflow-hidden rounded-xl border border-green-soft/30 bg-cream/30">
-      <div className="border-r border-green-soft/30 px-3 py-2 text-center">
-        <p className="text-[10px] uppercase tracking-wide text-text/50">
+      <div className="border-r border-green-soft/30 px-2 py-1.5 text-center sm:px-3 sm:py-2">
+        <p className="text-[9px] uppercase tracking-wide text-text/50 sm:text-[10px]">
           Calories
         </p>
-        <p className="font-heading text-sm font-bold text-green-deep">
+        <p className="font-heading text-xs font-bold text-green-deep sm:text-sm">
           {calories} kcal
         </p>
       </div>
-      <div className="px-3 py-2 text-center">
-        <p className="text-[10px] uppercase tracking-wide text-text/50">
+      <div className="px-2 py-1.5 text-center sm:px-3 sm:py-2">
+        <p className="text-[9px] uppercase tracking-wide text-text/50 sm:text-[10px]">
           Protein
         </p>
-        <p className="font-heading text-sm font-bold text-green-deep">
+        <p className="font-heading text-xs font-bold text-green-deep sm:text-sm">
           {protein}g
         </p>
       </div>
@@ -79,28 +80,43 @@ export function DishCard({
   onDetailsClick,
   priority = false,
 }: DishCardProps) {
+  const quantity = useCartStore((state) => {
+    const cartItem = state.items.find((row) => row.menuItemId === item.id);
+    return cartItem?.quantity ?? 0;
+  });
   const addItem = useCartStore((state) => state.addItem);
-  const openDrawer = useCartStore((state) => state.openDrawer);
+  const incrementQuantity = useCartStore((state) => state.incrementQuantity);
+  const decrementQuantity = useCartStore((state) => state.decrementQuantity);
+
   const primaryTag = item.tags?.[0];
   const showNutrition =
     item.calories !== undefined && item.protein !== undefined;
 
-  function handleAddToCart() {
-    addItem({
-      menuItemId: item.id,
-      slug: item.slug,
-      name: item.name,
-      price: item.price,
-      imageUrl: item.imageUrl,
-    });
-    toast.success("Added to cart");
-    openDrawer();
+  const cartItemPayload = {
+    menuItemId: item.id,
+    slug: item.slug,
+    name: item.name,
+    price: item.price,
+    imageUrl: item.imageUrl,
+  };
+
+  function handleOrderNow() {
+    addItem(cartItemPayload);
+    showAddedToCartToast();
+  }
+
+  function handleIncrement() {
+    incrementQuantity(item.id);
+  }
+
+  function handleDecrement() {
+    decrementQuantity(item.id);
   }
 
   return (
     <Card
       className={cn(
-        "group relative flex h-full flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-glow-card",
+        "group relative flex h-full w-full min-w-0 flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-glow-card-neon hover:ring-1 hover:ring-green-neon/25",
         !item.isAvailable && "opacity-90",
       )}
     >
@@ -122,7 +138,7 @@ export function DishCard({
           <div className="absolute left-0 top-3 z-10">
             <span
               className={cn(
-                "rounded-r-lg px-3 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm",
+                "max-w-[85%] truncate rounded-r-lg px-2 py-1 text-[9px] font-bold uppercase tracking-wide shadow-sm sm:max-w-none sm:px-3 sm:text-[10px]",
                 getTagRibbonClasses(primaryTag),
               )}
             >
@@ -145,7 +161,9 @@ export function DishCard({
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
-            <CardTitle className="text-lg">{item.name}</CardTitle>
+            <CardTitle className="text-base leading-snug sm:text-lg">
+              {item.name}
+            </CardTitle>
             {item.spiceLevel && (
               <div className="mt-1">
                 <SpiceIndicator level={item.spiceLevel} />
@@ -158,7 +176,7 @@ export function DishCard({
               />
             )}
           </div>
-          <span className="shrink-0 font-heading text-lg font-bold text-orange">
+          <span className="shrink-0 font-heading text-base font-bold text-orange sm:text-lg">
             ₹{item.price}
           </span>
         </div>
@@ -183,16 +201,24 @@ export function DishCard({
             Details
           </Button>
         )}
-        <Button
-          type="button"
-          variant="default"
-          size="sm"
-          className="w-full"
-          disabled={!item.isAvailable}
-          onClick={handleAddToCart}
-        >
-          {item.isAvailable ? "Order Now" : "Unavailable"}
-        </Button>
+        {item.isAvailable && quantity > 0 ? (
+          <DishQuantityStepper
+            quantity={quantity}
+            onIncrement={handleIncrement}
+            onDecrement={handleDecrement}
+          />
+        ) : (
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            className="neon-btn-orange w-full"
+            disabled={!item.isAvailable}
+            onClick={handleOrderNow}
+          >
+            {item.isAvailable ? "Order Now" : "Unavailable"}
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

@@ -26,7 +26,10 @@ const config: Config = {
       boxShadow: {
         glow: "0 0 20px rgba(168, 224, 99, 0.35)",
         "glow-orange": "0 0 24px rgba(232, 132, 58, 0.45)",
+        "glow-orange-neon": "0 0 20px rgba(255, 179, 71, 0.4)",
+        "glow-green-neon": "0 0 20px rgba(168, 224, 99, 0.5)",
         "glow-card": "0 0 30px rgba(168, 224, 99, 0.25)",
+        "glow-card-neon": "0 0 24px rgba(168, 224, 99, 0.35)",
       },
       backgroundImage: {
         "hero-gradient":
@@ -39,9 +42,24 @@ const config: Config = {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" },
         },
+        "neon-pulse-subtle": {
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "0.88", transform: "scale(1.04)" },
+        },
+        "neon-dot-pulse": {
+          "0%, 100%": { opacity: "0.25", transform: "scale(1)" },
+          "50%": { opacity: "0.55", transform: "scale(1.2)" },
+        },
+        "cart-neon-pulse": {
+          "0%, 100%": { boxShadow: "0 0 0 0 rgba(168, 224, 99, 0)" },
+          "50%": { boxShadow: "0 0 14px 3px rgba(168, 224, 99, 0.45)" },
+        },
       },
       animation: {
         "hero-float": "hero-float 3s ease-in-out infinite",
+        "neon-pulse-subtle": "neon-pulse-subtle 3s ease-in-out infinite",
+        "neon-dot-pulse": "neon-dot-pulse 4s ease-in-out infinite",
+        "cart-neon-pulse": "cart-neon-pulse 1.2s ease-in-out",
       },
     },
   },

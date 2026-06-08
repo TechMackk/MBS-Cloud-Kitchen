@@ -67,22 +67,22 @@ export function SmartCategories() {
           />
         </div>
 
-        <div className="flex gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 sm:overflow-visible lg:grid-cols-6">
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 lg:grid-cols-6">
           {CATEGORIES.map((category) => {
             const Icon = category.icon;
             return (
               <Link
                 key={category.id}
                 href={category.href}
-                className="group flex w-28 shrink-0 flex-col items-center rounded-2xl border border-green-soft/20 bg-white px-4 py-5 text-center shadow-sm transition-all duration-300 hover:border-green-soft hover:shadow-glow-card sm:w-auto"
+                className="group flex min-w-0 flex-col items-center rounded-2xl border border-green-soft/20 bg-white px-2 py-4 text-center shadow-sm transition-all duration-300 hover:border-green-neon/50 hover:shadow-glow-card-neon sm:px-4 sm:py-5"
               >
-                <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-cream transition-colors group-hover:border group-hover:border-green-soft">
+                <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full border border-transparent bg-cream transition-all duration-300 group-hover:border-green-neon group-hover:shadow-glow-green-neon sm:mb-3 sm:h-16 sm:w-16">
                   <Icon
-                    className="h-7 w-7 text-green-deep"
+                    className="h-5 w-5 text-green-deep motion-safe:animate-neon-pulse-subtle sm:h-7 sm:w-7"
                     aria-hidden="true"
                   />
                 </div>
-                <span className="text-sm font-medium text-green-deep">
+                <span className="text-xs font-medium leading-tight text-green-deep sm:text-sm">
                   {category.label}
                 </span>
               </Link>

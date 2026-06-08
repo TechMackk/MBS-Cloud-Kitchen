@@ -75,10 +75,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
-      <body className="flex min-h-screen flex-col font-sans">
+      <body className="flex min-h-screen flex-col overflow-x-hidden font-sans">
         <SkipLink />
         <Header />
-        <main id="main-content" className="flex-1">
+        <main id="main-content" className="min-w-0 flex-1 overflow-x-hidden">
           {children}
         </main>
         <Footer />

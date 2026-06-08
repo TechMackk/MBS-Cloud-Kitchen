@@ -9,7 +9,7 @@ export const MENU_TAG_SUGGESTIONS = [
 export type MenuTagSuggestion = (typeof MENU_TAG_SUGGESTIONS)[number];
 
 const TAG_RIBBON_CLASSES: Record<string, string> = {
-  "Chef Recommended": "bg-orange text-white",
+  "Chef Recommended": "bg-orange text-white shadow-[0_0_12px_rgba(255,179,71,0.45)]",
   "Healthy Choice": "bg-green-soft text-green-deep",
   Satvik: "bg-cream text-green-deep border border-orange/30",
   Spicy: "bg-red-600 text-white",

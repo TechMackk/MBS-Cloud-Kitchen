@@ -5,10 +5,11 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 
   body {
-    @apply bg-bg text-text antialiased;
+    @apply overflow-x-hidden bg-bg text-text antialiased;
   }
 
   h1,
@@ -22,6 +23,63 @@
 }
 
 @layer utilities {
+  .neon-text-glow-green {
+    text-shadow:
+      0 0 10px rgba(168, 224, 99, 0.3),
+      0 0 20px rgba(168, 224, 99, 0.12);
+  }
+
+  .neon-btn-orange {
+    transition: box-shadow 300ms ease;
+  }
+
+  .neon-btn-orange:hover {
+    box-shadow: 0 0 20px rgba(255, 179, 71, 0.4);
+  }
+
+  .neon-food-ring {
+    box-shadow: 0 0 14px rgba(168, 224, 99, 0.32);
+  }
+
+  .neon-trust-badge {
+    transition:
+      border-color 300ms ease,
+      box-shadow 300ms ease,
+      transform 300ms ease;
+  }
+
+  .neon-trust-badge:hover {
+    border-color: rgba(168, 224, 99, 0.55);
+    box-shadow: 0 0 14px rgba(168, 224, 99, 0.28);
+  }
+
+  .catering-neon-dots {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(168, 224, 99, 0.1) 1px,
+      transparent 0
+    );
+    background-size: 22px 22px;
+  }
+
+  .neon-social-hover {
+    transition: box-shadow 300ms ease, background-color 300ms ease;
+  }
+
+  .neon-social-hover:hover {
+    box-shadow: 0 0 14px rgba(255, 179, 71, 0.45);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .neon-btn-orange:hover {
+      box-shadow: none;
+    }
+
+    .neon-trust-badge:hover {
+      transform: none;
+    }
+  }
+
   .hero-pattern {
     background-image: radial-gradient(
         circle at 1px 1px,

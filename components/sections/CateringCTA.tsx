@@ -26,10 +26,14 @@ export function CateringCTA() {
         }}
         aria-hidden="true"
       />
+      <div
+        className="catering-neon-dots pointer-events-none absolute inset-0 opacity-60"
+        aria-hidden="true"
+      />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-10 lg:grid-cols-[3fr_2fr]">
-          <div className="order-2 lg:order-none">
+        <div className="grid min-w-0 items-center gap-8 sm:gap-10 lg:grid-cols-[3fr_2fr]">
+          <div className="order-2 min-w-0 lg:order-none">
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-orange">
               For Every Occasion
             </p>
@@ -40,7 +44,7 @@ export function CateringCTA() {
               Catering &amp; Bulk Orders
             </h2>
 
-            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+            <ul className="mt-6 grid grid-cols-1 gap-3 sm:mt-8 sm:grid-cols-2">
               {CHECKLIST.map((item) => (
                 <li
                   key={item}
@@ -55,13 +59,18 @@ export function CateringCTA() {
               ))}
             </ul>
 
-            <Button asChild variant="default" size="lg" className="mt-8 w-full sm:w-auto">
+            <Button
+              asChild
+              variant="default"
+              size="lg"
+              className="neon-btn-orange mt-8 w-full sm:w-auto"
+            >
               <Link href="/catering">Get Catering Quote &rarr;</Link>
             </Button>
           </div>
 
-          <div className="order-1 lg:order-none">
-            <div className="relative mx-auto aspect-[4/3] max-w-md overflow-hidden rounded-2xl border-2 border-green-soft/30 shadow-xl lg:max-w-none">
+          <div className="order-1 min-w-0 lg:order-none">
+            <div className="relative mx-auto aspect-[4/3] w-full max-w-full overflow-hidden rounded-2xl border-2 border-green-soft/30 shadow-xl sm:max-w-md lg:max-w-none">
               <Image
                 src="https://images.unsplash.com/photo-1555244167-11ddee37523d?w=800&h=600&fit=crop"
                 alt="Catering spread with traditional Indian dishes"

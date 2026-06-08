@@ -79,7 +79,7 @@ export function Header() {
 
         <div className="hidden items-center gap-2 md:flex">
           {!isAdminRoute && <CartIcon />}
-          <Button asChild variant="default" size="sm">
+          <Button asChild variant="default" size="sm" className="neon-btn-orange">
             <Link href="/menu">Order Now</Link>
           </Button>
         </div>

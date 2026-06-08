@@ -11,6 +11,9 @@ type CartState = {
   addItem: (item: Omit<CartItem, "quantity">) => void;
   removeItem: (menuItemId: string) => void;
   updateQuantity: (menuItemId: string, quantity: number) => void;
+  incrementQuantity: (menuItemId: string) => void;
+  decrementQuantity: (menuItemId: string) => void;
+  getQuantity: (menuItemId: string) => number;
   clearCart: () => void;
   getSubtotal: () => number;
   getCount: () => number;
@@ -64,6 +67,33 @@ export const useCartStore = create<CartState>()(
             row.menuItemId === menuItemId ? { ...row, quantity } : row,
           ),
         }));
+      },
+
+      incrementQuantity: (menuItemId) => {
+        const existing = get().items.find(
+          (row) => row.menuItemId === menuItemId,
+        );
+        if (!existing) {
+          return;
+        }
+        get().updateQuantity(menuItemId, existing.quantity + 1);
+      },
+
+      decrementQuantity: (menuItemId) => {
+        const existing = get().items.find(
+          (row) => row.menuItemId === menuItemId,
+        );
+        if (!existing) {
+          return;
+        }
+        get().updateQuantity(menuItemId, existing.quantity - 1);
+      },
+
+      getQuantity: (menuItemId) => {
+        const existing = get().items.find(
+          (row) => row.menuItemId === menuItemId,
+        );
+        return existing?.quantity ?? 0;
       },
 
       clearCart: () => set({ items: [] }),

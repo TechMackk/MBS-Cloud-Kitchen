@@ -44,21 +44,21 @@ export function WhyUs() {
           />
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {WHY_US_CARDS.map((card) => {
             const Icon = card.icon;
             return (
               <article
                 key={card.id}
-                className="rounded-2xl bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-glow-card"
+                className="min-w-0 rounded-2xl bg-white p-4 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-glow-card-neon sm:p-6"
               >
                 <div
-                  className="mb-5 flex h-[60px] w-[60px] items-center justify-center rounded-full bg-green-soft/20"
+                  className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-green-soft to-green-neon sm:mb-5 sm:h-[60px] sm:w-[60px]"
                   aria-hidden="true"
                 >
-                  <Icon className="h-7 w-7 text-green-soft" />
+                  <Icon className="h-6 w-6 text-green-deep sm:h-7 sm:w-7" />
                 </div>
-                <h3 className="font-heading text-lg font-bold text-green-deep">
+                <h3 className="font-heading text-base font-bold text-green-deep sm:text-lg">
                   {card.title}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-text/60">

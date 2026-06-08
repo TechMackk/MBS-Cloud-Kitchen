@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { CheckCircle2, Flame } from "lucide-react";
-import { toast } from "sonner";
 
+import { DishQuantityStepper } from "@/components/cart/DishQuantityStepper";
 import { VegBadge } from "@/components/menu/VegBadge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { showAddedToCartToast } from "@/lib/cart/toast";
 import { useCartStore } from "@/lib/cart/store";
 import type { MenuItem } from "@/lib/data/menu";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/image-placeholder";
@@ -31,6 +32,13 @@ export function DishDetailModal({
   onOpenChange,
 }: DishDetailModalProps) {
   const addItem = useCartStore((state) => state.addItem);
+  const incrementQuantity = useCartStore((state) => state.incrementQuantity);
+  const decrementQuantity = useCartStore((state) => state.decrementQuantity);
+  const quantity = useCartStore((state) => {
+    if (!item) return 0;
+    const cartItem = state.items.find((row) => row.menuItemId === item.id);
+    return cartItem?.quantity ?? 0;
+  });
 
   if (!item) {
     return null;
@@ -39,17 +47,25 @@ export function DishDetailModal({
   const hasNutrition =
     item.calories !== undefined || item.protein !== undefined;
 
-  function handleAddToCart() {
-    if (!item) return;
-    addItem({
-      menuItemId: item.id,
-      slug: item.slug,
-      name: item.name,
-      price: item.price,
-      imageUrl: item.imageUrl,
-    });
-    toast.success("Added to cart");
-    onOpenChange(false);
+  const cartItemPayload = {
+    menuItemId: item.id,
+    slug: item.slug,
+    name: item.name,
+    price: item.price,
+    imageUrl: item.imageUrl,
+  };
+
+  function handleOrderNow() {
+    addItem(cartItemPayload);
+    showAddedToCartToast();
+  }
+
+  function handleIncrement() {
+    incrementQuantity(cartItemPayload.menuItemId);
+  }
+
+  function handleDecrement() {
+    decrementQuantity(cartItemPayload.menuItemId);
   }
 
   return (
@@ -152,7 +168,7 @@ export function DishDetailModal({
           </ul>
         </div>
 
-        <div className="flex items-center justify-between gap-4 border-t border-green-soft/20 pt-4">
+        <div className="flex flex-col gap-4 border-t border-green-soft/20 pt-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="font-heading text-2xl font-bold text-orange">
               ₹{item.price}
@@ -161,15 +177,25 @@ export function DishDetailModal({
               <p className="text-sm text-text/60">{item.servingSize}</p>
             )}
           </div>
-          <Button
-            type="button"
-            variant="default"
-            size="lg"
-            disabled={!item.isAvailable}
-            onClick={handleAddToCart}
-          >
-            {item.isAvailable ? "Add to Cart" : "Currently Unavailable"}
-          </Button>
+          {item.isAvailable && quantity > 0 ? (
+            <DishQuantityStepper
+              quantity={quantity}
+              onIncrement={handleIncrement}
+              onDecrement={handleDecrement}
+              className="w-full sm:max-w-xs"
+            />
+          ) : (
+            <Button
+              type="button"
+              variant="default"
+              size="lg"
+              className="w-full sm:w-auto"
+              disabled={!item.isAvailable}
+              onClick={handleOrderNow}
+            >
+              {item.isAvailable ? "Order Now" : "Currently Unavailable"}
+            </Button>
+          )}
         </div>
       </DialogContent>
     </Dialog>

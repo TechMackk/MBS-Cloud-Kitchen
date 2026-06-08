@@ -51,7 +51,8 @@ export function CartIcon() {
         onClick={openDrawer}
         className={cn(
           "relative rounded-xl p-2 text-green-deep transition-colors hover:bg-cream",
-          pulse && "scale-110",
+          pulse && "motion-safe:animate-cart-neon-pulse scale-110",
+          count > 0 && !pulse && "ring-1 ring-green-neon/30",
         )}
         aria-label={`Shopping cart, ${count} items`}
       >
