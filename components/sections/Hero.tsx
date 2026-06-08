@@ -1,24 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Phone, User } from "lucide-react";
-
-import { HeroThaliWheel } from "@/components/sections/HeroThaliWheel";
-import { getDishesBySlugs } from "@/lib/db/menu";
 
 const PHONE_NUMBER_DISPLAY = "+91 98486 06161";
 const PHONE_NUMBER_TEL = "+919848606161";
 
-const HERO_SATELLITE_SLUGS = [
-  "garlic-chicken-fry-piece-biryani-single",
-  "baby-corn-manchurian",
-  "chilli-fish-boneless",
-  "chilli-prawns",
-  "veg-manchurian",
-  "chicken-fried-rice",
-] as const;
-
-export async function Hero() {
-  const satellites = await getDishesBySlugs([...HERO_SATELLITE_SLUGS]);
-
+export function Hero() {
   return (
     <section
       className="relative overflow-hidden bg-royal-bg-primary text-cream-warm"
@@ -30,8 +17,8 @@ export async function Hero() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <div className="order-1">
+        <div className="grid min-w-0 items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <div className="order-1 min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-primary sm:text-sm">
               MIND &bull; BODY &bull; SOUL CLOUD KITCHEN
             </p>
@@ -95,12 +82,26 @@ export async function Hero() {
             </div>
           </div>
 
-          <div className="order-2 flex items-center justify-center">
-            <div className="block lg:hidden">
-              <HeroThaliWheel satellites={satellites} mode="mobile" />
-            </div>
-            <div className="hidden lg:block">
-              <HeroThaliWheel satellites={satellites} mode="desktop" />
+          <div className="order-2 flex min-w-0 items-center justify-center">
+            <div className="relative mx-auto w-full max-w-[280px] lg:max-w-[80%]">
+              <div
+                className="pointer-events-none absolute inset-0 -z-10 scale-110 rounded-full"
+                style={{
+                  background:
+                    "radial-gradient(circle at center, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0) 70%)",
+                }}
+                aria-hidden="true"
+              />
+              <div className="relative aspect-square w-full motion-safe:transition-transform motion-safe:duration-300 motion-safe:hover:scale-[1.02]">
+                <Image
+                  src="/logo-badge.png"
+                  alt="MBS Cloud Kitchen"
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 280px, 40vw"
+                  className="object-contain"
+                />
+              </div>
             </div>
           </div>
         </div>
