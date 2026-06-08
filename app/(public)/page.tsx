@@ -3,9 +3,14 @@ import { CateringCTA } from "@/components/sections/CateringCTA";
 import { FeaturedDishes } from "@/components/sections/FeaturedDishes";
 import { Hero } from "@/components/sections/Hero";
 import { LocationPreview } from "@/components/sections/LocationPreview";
-import { QualityPromise } from "@/components/sections/QualityPromise";
-import { SmartCategories } from "@/components/sections/SmartCategories";
-import { WhyUs } from "@/components/sections/WhyUs";
+import {
+  CustomerReviews,
+  FestivalBanner,
+  FinalCTA,
+  FoodJourneyTimeline,
+  MindBodySoul,
+  WhyMBS,
+} from "@/components/sections/home";
 import { buildMetadata } from "@/lib/seo";
 import { getRestaurantSchema } from "@/lib/seo/structured-data";
 
@@ -20,15 +25,21 @@ export const metadata = buildMetadata({
 
 export default function HomePage() {
   return (
-    <>
+    <div className="home-feast">
       <JsonLd data={getRestaurantSchema()} />
+
       <Hero />
-      <WhyUs />
-      <SmartCategories />
+      <MindBodySoul />
       <FeaturedDishes />
+      <FoodJourneyTimeline />
+      <WhyMBS />
+      <CustomerReviews />
       <CateringCTA />
-      <QualityPromise />
+      <FinalCTA />
       <LocationPreview />
-    </>
+
+      {/* Phase D2 skeleton — not rendered until festival config is active */}
+      <FestivalBanner />
+    </div>
   );
 }

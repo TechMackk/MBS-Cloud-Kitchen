@@ -80,6 +80,154 @@
     }
   }
 
+  /**
+   * Homepage-only feast theme (Phase A).
+   * Scoped to .home-feast — does not override global site colors.
+   */
+  .home-feast {
+    --feast-primary: #d97706;
+    --feast-secondary: #14532d;
+    --feast-accent: #dc2626;
+    --feast-bg: #fffdf7;
+    --feast-text: #1f2937;
+    background-color: var(--feast-bg);
+    color: var(--feast-text);
+  }
+
+  .feast-btn-primary {
+    background-color: var(--feast-primary) !important;
+    color: #fff !important;
+    transition: box-shadow 300ms ease, background-color 300ms ease;
+  }
+
+  .feast-btn-primary:hover {
+    box-shadow: 0 0 20px rgba(255, 179, 71, 0.45);
+    background-color: #e88a14 !important;
+  }
+
+  .feast-btn-outline {
+    border-color: var(--feast-secondary) !important;
+    color: var(--feast-secondary) !important;
+    background-color: transparent !important;
+  }
+
+  .feast-btn-outline:hover {
+    background-color: var(--feast-secondary) !important;
+    color: var(--feast-bg) !important;
+  }
+
+  .feast-glass-card {
+    border: 1px solid color-mix(in srgb, var(--feast-secondary) 12%, transparent);
+    background: color-mix(in srgb, var(--feast-bg) 72%, transparent);
+    backdrop-filter: blur(12px);
+    box-shadow:
+      0 4px 24px rgba(20, 83, 45, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .feast-glass-card {
+      transition: none;
+    }
+  }
+
+  /* Food journey timeline (Phase C2) */
+  .feast-timeline-node {
+    position: relative;
+    z-index: 1;
+    border: 1px solid color-mix(in srgb, var(--feast-secondary) 14%, transparent);
+    background: color-mix(in srgb, var(--feast-bg) 85%, transparent);
+    color: var(--feast-primary);
+    box-shadow:
+      0 4px 16px rgba(20, 83, 45, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+
+  .feast-timeline-connector-horizontal {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--feast-primary) 35%, transparent),
+      color-mix(in srgb, var(--feast-secondary) 45%, transparent),
+      color-mix(in srgb, var(--feast-primary) 35%, transparent)
+    );
+  }
+
+  .feast-timeline-connector-vertical {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--feast-primary) 40%, transparent),
+      color-mix(in srgb, var(--feast-secondary) 50%, transparent)
+    );
+  }
+
+  /* CSS-only hero steam (Phase B) */
+  .hero-steam {
+    z-index: 2;
+  }
+
+  .hero-steam-wisp {
+    position: absolute;
+    bottom: 18%;
+    border-radius: 50%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(255, 253, 247, 0.55) 0%,
+      rgba(255, 253, 247, 0.2) 40%,
+      transparent 70%
+    );
+    filter: blur(12px);
+    opacity: 0.5;
+  }
+
+  .hero-steam-wisp-1 {
+    left: 22%;
+    width: 28%;
+    height: 22%;
+    animation: hero-steam-rise 7s ease-in-out infinite;
+  }
+
+  .hero-steam-wisp-2 {
+    left: 48%;
+    width: 22%;
+    height: 18%;
+    animation: hero-steam-rise 9s ease-in-out infinite;
+    animation-delay: 1.5s;
+  }
+
+  .hero-steam-wisp-3 {
+    left: 68%;
+    width: 20%;
+    height: 16%;
+    animation: hero-steam-rise 8s ease-in-out infinite;
+    animation-delay: 3s;
+  }
+
+  @keyframes hero-steam-rise {
+    0% {
+      transform: translateY(12%) scale(0.9);
+      opacity: 0.25;
+    }
+    50% {
+      transform: translateY(-18%) scale(1.05);
+      opacity: 0.55;
+    }
+    100% {
+      transform: translateY(-36%) scale(1.1);
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-steam-wisp {
+      animation: none;
+      opacity: 0.2;
+    }
+
+    .feast-btn-primary:hover {
+      box-shadow: none;
+    }
+  }
+
   .hero-pattern {
     background-image: radial-gradient(
         circle at 1px 1px,
