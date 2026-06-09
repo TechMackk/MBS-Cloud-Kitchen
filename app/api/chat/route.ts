@@ -2,9 +2,9 @@ import * as Sentry from "@sentry/nextjs";
 import { streamText, type CoreMessage } from "ai";
 
 import {
-  getChatModelId,
+  getChatModel,
   getMaxTokensPerResponse,
-  getOpenAIProvider,
+  isChatConfigured,
 } from "@/lib/ai/client";
 import { buildSystemPrompt } from "@/lib/chat/prompt";
 import {
@@ -40,7 +40,7 @@ function jsonError(message: string, status: number) {
 
 export async function POST(request: Request) {
   try {
-    if (!process.env.OPENAI_API_KEY) {
+    if (!isChatConfigured()) {
       return jsonError(
         "Chat is temporarily unavailable. Please WhatsApp us at +91 81796 56696.",
         503,
@@ -81,17 +81,30 @@ export async function POST(request: Request) {
       );
     }
 
-    if (await isSessionOverLimit(sessionId)) {
-      return jsonError(
-        "This chat session has reached its message limit. Please start a new session or contact us on WhatsApp.",
-        429,
-      );
+    try {
+      if (await isSessionOverLimit(sessionId)) {
+        return jsonError(
+          "This chat session has reached its message limit. Please start a new session or contact us on WhatsApp.",
+          429,
+        );
+      }
+    } catch (sessionError) {
+      console.error("[chat] session limit check failed:", sessionError);
+      Sentry.captureException(sessionError);
+      // Continue without session limit if DB is temporarily unavailable.
     }
 
-    const chunks = await retrieveContext(lastUserMessage.content, 5);
+    let chunks: Awaited<ReturnType<typeof retrieveContext>> = [];
+    try {
+      chunks = await retrieveContext(lastUserMessage.content, 5);
+    } catch (ragError) {
+      console.error("[chat] knowledge retrieval failed:", ragError);
+      Sentry.captureException(ragError);
+      // Continue with empty context so chat still works without RAG.
+    }
+
     const system = buildSystemPrompt(chunks);
 
-    const provider = getOpenAIProvider();
     const coreMessages: CoreMessage[] = messages
       .filter((msg) => msg.role === "user" || msg.role === "assistant")
       .map((msg) => ({
@@ -100,7 +113,7 @@ export async function POST(request: Request) {
       }));
 
     const result = streamText({
-      model: provider(getChatModelId()),
+      model: getChatModel(),
       system,
       messages: coreMessages,
       maxTokens: getMaxTokensPerResponse(),

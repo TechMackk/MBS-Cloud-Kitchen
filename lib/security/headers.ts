@@ -24,7 +24,7 @@ export function buildCsp(nonce: string): string {
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co",
     "font-src 'self' data:",
-    "connect-src 'self' https://*.supabase.co https://*.ingest.sentry.io https://vitals.vercel-insights.com https://*.openai.com https://graph.facebook.com",
+    "connect-src 'self' https://*.supabase.co https://*.ingest.sentry.io https://vitals.vercel-insights.com https://*.openai.com https://generativelanguage.googleapis.com https://graph.facebook.com",
     "frame-src 'self' https://www.google.com",
     "worker-src 'self' blob:",
     "object-src 'none'",

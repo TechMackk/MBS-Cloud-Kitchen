@@ -45,6 +45,24 @@ export function ChatPanel({ open, onClose, onMinimize }: ChatPanelProps) {
   } = useChat({
     api: "/api/chat",
     body: chatBody,
+    fetch: async (input, init) => {
+      const response = await fetch(input, init);
+
+      if (!response.ok) {
+        let message = `Chat request failed (${response.status})`;
+        try {
+          const body = (await response.json()) as { error?: string };
+          if (body.error) {
+            message = body.error;
+          }
+        } catch {
+          // Non-JSON error body — keep default message.
+        }
+        throw new Error(message);
+      }
+
+      return response;
+    },
   });
 
   const isLoading = status === "submitted" || status === "streaming";
@@ -121,7 +139,8 @@ export function ChatPanel({ open, onClose, onMinimize }: ChatPanelProps) {
       {error && (
         <div className="border-b border-orange/20 bg-orange/5 px-4 py-3 text-sm text-orange">
           <p>
-            I&apos;m having trouble right now. Please try again or WhatsApp us.
+            {error.message ||
+              "I'm having trouble right now. Please try again or WhatsApp us."}
           </p>
           <Button
             type="button"
