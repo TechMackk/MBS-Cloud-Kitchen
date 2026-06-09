@@ -79,11 +79,12 @@ export function CateringCTA() {
           <div className="order-1 min-w-0 lg:order-2">
             <div className="relative mx-auto aspect-[4/3] w-full max-w-full overflow-hidden rounded-2xl border-2 border-gold-primary shadow-[0_0_32px_rgba(212,175,55,0.18)] sm:max-w-md lg:max-w-none">
               <Image
-                src="https://images.unsplash.com/photo-1555244167-11ddee37523d?w=800&h=600&fit=crop"
-                alt="Catering spread with traditional Indian dishes"
-                fill
+                src="/catering-banner.jpg"
+                alt="MBS catering spread"
+                width={800}
+                height={600}
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
+                className="h-full w-full object-cover"
               />
             </div>
           </div>
