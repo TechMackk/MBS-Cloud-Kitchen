@@ -79,7 +79,7 @@ export function CateringCTA() {
           <div className="order-1 min-w-0 lg:order-2">
             <div className="relative mx-auto aspect-[4/3] w-full max-w-full overflow-hidden rounded-2xl border-2 border-gold-primary shadow-[0_0_32px_rgba(212,175,55,0.18)] sm:max-w-md lg:max-w-none">
               <Image
-                src="/catering-banner.jpg"
+                src="/catering-banner.png"
                 alt="MBS catering spread"
                 width={800}
                 height={600}
