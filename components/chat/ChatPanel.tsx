@@ -139,8 +139,7 @@ export function ChatPanel({ open, onClose, onMinimize }: ChatPanelProps) {
       {error && (
         <div className="border-b border-orange/20 bg-orange/5 px-4 py-3 text-sm text-orange">
           <p>
-            {error.message ||
-              "I'm having trouble right now. Please try again or WhatsApp us."}
+            {error.message || "I'm having trouble right now. Please try again or WhatsApp us."}
           </p>
           <Button
             type="button"

@@ -6,6 +6,11 @@ export const EMBEDDING_DIMENSIONS = 1536;
 
 export type AIProviderName = "gemini" | "openai";
 
+const GEMINI_CHAT_DEFAULT = "gemini-1.5-flash";
+const OPENAI_CHAT_DEFAULT = "gpt-4o-mini";
+const GEMINI_EMBEDDING_DEFAULT = "text-embedding-004";
+const OPENAI_EMBEDDING_DEFAULT = "text-embedding-3-small";
+
 export function getGeminiApiKey(): string | undefined {
   const key =
     process.env.GEMINI_API_KEY?.trim() ||
@@ -27,24 +32,87 @@ export function isChatConfigured(): boolean {
   return getActiveAIProvider() !== null;
 }
 
+function isGeminiModelId(modelId: string): boolean {
+  return modelId.startsWith("gemini");
+}
+
+function isOpenAIModelId(modelId: string): boolean {
+  return (
+    modelId.startsWith("gpt") ||
+    modelId.startsWith("o1") ||
+    modelId.startsWith("o3") ||
+    modelId.startsWith("o4")
+  );
+}
+
+function isGeminiEmbeddingModelId(modelId: string): boolean {
+  return modelId.includes("embedding-004") || modelId.startsWith("gemini-embedding");
+}
+
+function isOpenAIEmbeddingModelId(modelId: string): boolean {
+  return modelId.startsWith("text-embedding");
+}
+
 export function getChatModelId(): string {
-  if (process.env.AI_CHAT_MODEL?.trim()) {
-    return process.env.AI_CHAT_MODEL.trim();
+  const provider = getActiveAIProvider();
+  const configured = process.env.AI_CHAT_MODEL?.trim();
+
+  if (provider === "gemini") {
+    if (configured && isGeminiModelId(configured)) {
+      return configured;
+    }
+    if (configured && !isGeminiModelId(configured)) {
+      console.warn(
+        `[ai] Ignoring AI_CHAT_MODEL="${configured}" for Gemini — using ${GEMINI_CHAT_DEFAULT}`,
+      );
+    }
+    return GEMINI_CHAT_DEFAULT;
   }
 
-  return getActiveAIProvider() === "gemini"
-    ? "gemini-2.0-flash"
-    : "gpt-4o-mini";
+  if (provider === "openai") {
+    if (configured && (isOpenAIModelId(configured) || !isGeminiModelId(configured))) {
+      return configured;
+    }
+    if (configured && isGeminiModelId(configured)) {
+      console.warn(
+        `[ai] Ignoring AI_CHAT_MODEL="${configured}" for OpenAI — using ${OPENAI_CHAT_DEFAULT}`,
+      );
+    }
+    return OPENAI_CHAT_DEFAULT;
+  }
+
+  return OPENAI_CHAT_DEFAULT;
 }
 
 export function getEmbeddingModelId(): string {
-  if (process.env.AI_EMBEDDING_MODEL?.trim()) {
-    return process.env.AI_EMBEDDING_MODEL.trim();
+  const provider = getActiveAIProvider();
+  const configured = process.env.AI_EMBEDDING_MODEL?.trim();
+
+  if (provider === "gemini") {
+    if (configured && isGeminiEmbeddingModelId(configured)) {
+      return configured;
+    }
+    if (configured && isOpenAIEmbeddingModelId(configured)) {
+      console.warn(
+        `[ai] Ignoring AI_EMBEDDING_MODEL="${configured}" for Gemini — using ${GEMINI_EMBEDDING_DEFAULT}`,
+      );
+    }
+    return GEMINI_EMBEDDING_DEFAULT;
   }
 
-  return getActiveAIProvider() === "gemini"
-    ? "text-embedding-004"
-    : "text-embedding-3-small";
+  if (provider === "openai") {
+    if (configured && isOpenAIEmbeddingModelId(configured)) {
+      return configured;
+    }
+    if (configured && isGeminiEmbeddingModelId(configured)) {
+      console.warn(
+        `[ai] Ignoring AI_EMBEDDING_MODEL="${configured}" for OpenAI — using ${OPENAI_EMBEDDING_DEFAULT}`,
+      );
+    }
+    return OPENAI_EMBEDDING_DEFAULT;
+  }
+
+  return OPENAI_EMBEDDING_DEFAULT;
 }
 
 export function getMaxTokensPerResponse(): number {

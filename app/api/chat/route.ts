@@ -1,8 +1,10 @@
 import * as Sentry from "@sentry/nextjs";
-import { streamText, type CoreMessage } from "ai";
+import { APICallError, streamText, type CoreMessage } from "ai";
 
 import {
+  getActiveAIProvider,
   getChatModel,
+  getChatModelId,
   getMaxTokensPerResponse,
   isChatConfigured,
 } from "@/lib/ai/client";
@@ -35,6 +37,36 @@ function jsonError(message: string, status: number) {
   return new Response(JSON.stringify({ error: message }), {
     status,
     headers: { "Content-Type": "application/json" },
+  });
+}
+
+function formatChatError(error: unknown): string {
+  if (APICallError.isInstance(error)) {
+    const status = error.statusCode ? ` (${error.statusCode})` : "";
+    const body =
+      typeof error.responseBody === "string" && error.responseBody.trim()
+        ? `: ${error.responseBody.slice(0, 200)}`
+        : "";
+    return `${error.message}${status}${body}`;
+  }
+
+  if (error instanceof Error && error.message.trim()) {
+    return error.message;
+  }
+
+  return "Unknown chat error";
+}
+
+/** Lightweight health check — confirms provider + model resolution (no secrets). */
+export async function GET() {
+  if (!isChatConfigured()) {
+    return jsonError("Chat AI provider is not configured", 503);
+  }
+
+  return Response.json({
+    ok: true,
+    provider: getActiveAIProvider(),
+    model: getChatModelId(),
   });
 }
 
@@ -119,28 +151,36 @@ export async function POST(request: Request) {
       maxTokens: getMaxTokensPerResponse(),
       temperature: 0.7,
       onFinish: async ({ text }: { text: string }) => {
-        const fullMessages = [
-          ...messages,
-          { role: "assistant", content: text },
-        ];
+        try {
+          const fullMessages = [
+            ...messages,
+            { role: "assistant", content: text },
+          ];
 
-        await persistChatSession({
-          sessionId,
-          messages: fullMessages,
-          ipAddress: ip,
-          userAgent,
-        });
+          await persistChatSession({
+            sessionId,
+            messages: fullMessages,
+            ipAddress: ip,
+            userAgent,
+          });
+        } catch (persistError) {
+          console.error("[chat] session persist failed:", persistError);
+          Sentry.captureException(persistError);
+        }
       },
     });
 
-    return result.toDataStreamResponse();
+    return result.toDataStreamResponse({
+      getErrorMessage: formatChatError,
+    });
   } catch (error) {
     Sentry.setTag("route", "/api/chat");
     Sentry.setTag("user_role", "anonymous");
     Sentry.captureException(error);
-    console.error("[chat]", error);
+    const detail = formatChatError(error);
+    console.error("[chat]", detail, error);
     return jsonError(
-      "I'm having trouble right now. Please try again or WhatsApp us at +91 81796 56696.",
+      `Chat error: ${detail}. Please try again or WhatsApp us at +91 81796 56696.`,
       500,
     );
   }
