@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "in.mbscloudkitchen.app",
+      "sha256_cert_fingerprints": [
+        "91:0E:4A:0A:A0:B1:EE:12:30:C8:45:87:8F:87:CB:98:B1:65:70:BF:88:88:B3:4C:98:7C:D5:DA:1C:6E:4E:3E"
+      ]
+    }
+  }
+]
