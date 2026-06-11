@@ -1,4 +1,4 @@
-import { Clock, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CONTACT, whatsappUrl } from "@/lib/constants";
+import { BUSINESS, businessEmailMailto } from "@/lib/constants/business";
 import { buildMapsPlaceUrl } from "@/lib/geo";
 
 const CONTACT_HOURS = "Mon – Sun: 11:00 AM – 11:00 PM";
@@ -21,7 +22,7 @@ export function ContactInfo() {
           Contact Information
         </h2>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4">
           <Card>
             <CardHeader>
               <div
@@ -47,6 +48,28 @@ export function ContactInfo() {
                 aria-label={`Call ${CONTACT.callSecondary}`}
               >
                 {CONTACT.callSecondary}
+              </a>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <div
+                className="mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-cream text-orange"
+                aria-hidden="true"
+              >
+                <Mail className="h-6 w-6" />
+              </div>
+              <CardTitle>Email Us</CardTitle>
+              <CardDescription>General enquiries and support</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <a
+                href={businessEmailMailto()}
+                className="block text-sm font-medium text-green-deep transition-colors hover:text-orange"
+                aria-label={`Email ${BUSINESS.email}`}
+              >
+                {BUSINESS.email}
               </a>
             </CardContent>
           </Card>

@@ -15,6 +15,7 @@ import {
 import { Logo } from "@/components/layout/Logo";
 import { Button } from "@/components/ui/button";
 import { CONTACT, SITE, whatsappUrl } from "@/lib/constants";
+import { BUSINESS, businessEmailMailto } from "@/lib/constants/business";
 import { isWhatsAppWebUrl } from "@/lib/whatsapp/links";
 import { cn } from "@/lib/utils";
 
@@ -268,12 +269,12 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:hello@mbscloudkitchen.in"
+                  href={businessEmailMailto()}
                   className={cn(
                     "flex items-center gap-2 transition-colors",
                     isRoyalHome ? "hover:text-gold-light" : "hover:text-orange",
                   )}
-                  aria-label="Email hello@mbscloudkitchen.in"
+                  aria-label={`Email ${BUSINESS.email}`}
                 >
                   <Mail
                     className={cn(
@@ -283,7 +284,7 @@ export function Footer() {
                     aria-hidden="true"
                   />
                   <span className="break-all sm:break-normal">
-                    hello@mbscloudkitchen.in
+                    {BUSINESS.email}
                   </span>
                 </a>
               </li>

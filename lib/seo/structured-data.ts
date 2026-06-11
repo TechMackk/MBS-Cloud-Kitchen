@@ -1,6 +1,7 @@
 import { CATEGORY_LABELS, MENU_CATEGORIES } from "@/lib/data/categories";
 import type { MenuItem } from "@/lib/data/menu";
 import { CONTACT, HOURS, LOCATION, SITE } from "@/lib/constants";
+import { BUSINESS } from "@/lib/constants/business";
 import { getSiteUrl } from "@/lib/seo/site-url";
 
 export function getRestaurantSchema() {
@@ -11,6 +12,7 @@ export function getRestaurantSchema() {
     "@type": "Restaurant",
     name: SITE.name,
     image: `${siteUrl}/og-image.png`,
+    email: BUSINESS.email,
     telephone: CONTACT.callPrimaryRaw.replace(/^91/, "+91"),
     priceRange: "₹₹",
     servesCuisine: ["Telangana", "Hyderabadi", "Indo-Chinese", "Indian"],

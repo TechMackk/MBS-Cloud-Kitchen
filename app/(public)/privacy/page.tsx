@@ -7,6 +7,7 @@ import {
 } from "@/components/legal/LegalPageLayout";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { CONTACT } from "@/lib/constants";
+import { BUSINESS, businessEmailMailto } from "@/lib/constants/business";
 import { buildMetadata } from "@/lib/seo";
 import { getBreadcrumbSchema } from "@/lib/seo/structured-data";
 
@@ -107,10 +108,10 @@ export default function PrivacyPage() {
             <li>
               Email:{" "}
               <a
-                href="mailto:hello@mbscloudkitchen.in"
+                href={businessEmailMailto()}
                 className="font-medium text-gold-primary underline-offset-2 hover:underline"
               >
-                hello@mbscloudkitchen.in
+                {BUSINESS.email}
               </a>
             </li>
             <li>

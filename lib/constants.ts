@@ -1,23 +1,31 @@
+import { BUSINESS } from "@/lib/constants/business";
+
+function toRawPhone(phone: string): string {
+  return phone.replace(/\D/g, "");
+}
+
+export { BUSINESS } from "@/lib/constants/business";
+
 export const SITE = {
   name: "MBS Cloud Kitchen",
   tagline: "Mind, Body & Soul",
   subTagline: "Telangana Specials",
   description:
     "Authentic Telangana Specials, Delivered Fresh. Mind, Body & Soul.",
-  url: "https://mbscloudkitchen.in",
+  url: BUSINESS.siteUrl,
 } as const;
 
 export const CONTACT = {
-  address:
-    "Road No 3, Plot No 44, Near Hanuman Temple, Hyderabad, 500091, Telangana, India",
-  whatsappOrders: "+91 81796 56696",
-  whatsappOrdersRaw: "918179656696",
-  whatsappCatering: "+91 96769 40777",
-  whatsappCateringRaw: "919676940777",
-  callPrimary: "+91 98486 06161",
-  callPrimaryRaw: "919848606161",
-  callSecondary: "+91 98486 06262",
-  callSecondaryRaw: "919848606262",
+  email: BUSINESS.email,
+  address: BUSINESS.address,
+  whatsappOrders: BUSINESS.whatsapp.orders,
+  whatsappOrdersRaw: toRawPhone(BUSINESS.whatsapp.orders),
+  whatsappCatering: BUSINESS.whatsapp.catering,
+  whatsappCateringRaw: toRawPhone(BUSINESS.whatsapp.catering),
+  callPrimary: BUSINESS.phone.primary,
+  callPrimaryRaw: toRawPhone(BUSINESS.phone.primary),
+  callSecondary: BUSINESS.phone.secondary,
+  callSecondaryRaw: toRawPhone(BUSINESS.phone.secondary),
 } as const;
 
 export const LOCATION = {
