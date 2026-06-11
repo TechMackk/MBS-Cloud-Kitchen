@@ -15,6 +15,7 @@ import {
 import { Logo } from "@/components/layout/Logo";
 import { Button } from "@/components/ui/button";
 import { CONTACT, SITE, whatsappUrl } from "@/lib/constants";
+import { isWhatsAppWebUrl } from "@/lib/whatsapp/links";
 import { cn } from "@/lib/utils";
 
 const MENU_LINKS = [
@@ -102,7 +103,7 @@ export function Footer() {
   return (
     <footer
       className={cn(
-        "mt-auto relative overflow-hidden",
+        "relative mt-auto overflow-hidden",
         isRoyalHome
           ? "royal-footer bg-royal-bg-primary text-cream-warm"
           : "bg-green-deep text-cream",
@@ -110,7 +111,7 @@ export function Footer() {
     >
       {isRoyalHome ? (
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-24 border-b border-gold-dark/30 royal-arch-pattern"
+          className="royal-arch-pattern pointer-events-none absolute inset-x-0 top-0 h-24 border-b border-gold-dark/30"
           aria-hidden="true"
         />
       ) : null}
@@ -138,16 +139,24 @@ export function Footer() {
                 )}
               />
               <p className="text-sm font-medium">
-                {isRoyalHome ? "Healthy Telangana Foods" : "Healthy Telangana Foods"}
+                {isRoyalHome
+                  ? "Healthy Telangana Foods"
+                  : "Healthy Telangana Foods"}
               </p>
               <div className="flex flex-wrap gap-2 sm:gap-3">
                 {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
                   <a
                     key={label}
                     href={href}
-                    target={href.startsWith("http") ? "_blank" : undefined}
+                    target={
+                      href.startsWith("http") && !isWhatsAppWebUrl(href)
+                        ? "_blank"
+                        : undefined
+                    }
                     rel={
-                      href.startsWith("http") ? "noopener noreferrer" : undefined
+                      href.startsWith("http") && !isWhatsAppWebUrl(href)
+                        ? "noopener noreferrer"
+                        : undefined
                     }
                     className={cn(
                       "neon-social-hover flex h-8 w-8 items-center justify-center rounded-full sm:h-9 sm:w-9",
@@ -157,7 +166,10 @@ export function Footer() {
                     )}
                     aria-label={label}
                   >
-                    <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
+                    <Icon
+                      className="h-3.5 w-3.5 sm:h-4 sm:w-4"
+                      aria-hidden="true"
+                    />
                   </a>
                 ))}
               </div>
@@ -303,7 +315,12 @@ export function Footer() {
               >
                 Craving Something?
               </h4>
-              <p className={cn("mt-1 text-sm", isRoyalHome ? "text-cream-warm/80" : "text-cream/80")}>
+              <p
+                className={cn(
+                  "mt-1 text-sm",
+                  isRoyalHome ? "text-cream-warm/80" : "text-cream/80",
+                )}
+              >
                 We are just a call away!
               </p>
 
@@ -315,10 +332,12 @@ export function Footer() {
                   className={cn(
                     "neon-btn-orange w-full sm:w-auto",
                     isRoyalHome &&
-                      "border border-gold-dark/35 hover:shadow-none hover:shadow-[0_0_24px_rgba(212,175,55,0.35)]",
+                      "border border-gold-dark/35 hover:shadow-[0_0_24px_rgba(212,175,55,0.35)] hover:shadow-none",
                   )}
                 >
-                  <a href={`tel:${CONTACT.callPrimaryRaw}`}>{CONTACT.callPrimary}</a>
+                  <a href={`tel:${CONTACT.callPrimaryRaw}`}>
+                    {CONTACT.callPrimary}
+                  </a>
                 </Button>
 
                 <Button
@@ -328,7 +347,7 @@ export function Footer() {
                   className={cn(
                     "w-full sm:w-auto",
                     isRoyalHome
-                      ? "!bg-[#25D366] !hover:bg-[#22c55e] !shadow-none"
+                      ? "!hover:bg-[#22c55e] !bg-[#25D366] !shadow-none"
                       : "bg-green-soft hover:bg-green-neon",
                   )}
                 >
@@ -337,8 +356,6 @@ export function Footer() {
                       CONTACT.whatsappOrdersRaw,
                       "Hi, I'd like to place an order!",
                     )}
-                    target="_blank"
-                    rel="noopener noreferrer"
                   >
                     WhatsApp Us
                   </a>
@@ -361,7 +378,9 @@ export function Footer() {
             isRoyalHome ? "text-gold-dark/85" : "text-cream/80",
           )}
         >
-          <p className="min-w-0">&copy; 2026 {SITE.name}. All Rights Reserved.</p>
+          <p className="min-w-0">
+            &copy; 2026 {SITE.name}. All Rights Reserved.
+          </p>
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <Link
               href="#"
@@ -388,4 +407,3 @@ export function Footer() {
     </footer>
   );
 }
-

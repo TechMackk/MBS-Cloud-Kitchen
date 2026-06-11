@@ -49,9 +49,17 @@ const occasionValues = [
   "other",
 ] as const satisfies readonly OccasionType[];
 
-const sessionValues = ["lunch", "dinner", "both"] as const satisfies readonly SessionType[];
+const sessionValues = [
+  "lunch",
+  "dinner",
+  "both",
+] as const satisfies readonly SessionType[];
 
-const dietValues = ["veg", "non-veg", "both"] as const satisfies readonly CateringDietPreference[];
+const dietValues = [
+  "veg",
+  "non-veg",
+  "both",
+] as const satisfies readonly CateringDietPreference[];
 
 const cateringFormSchema = z.object({
   occasion: z.enum(occasionValues, {
@@ -230,16 +238,14 @@ export function CateringForm({ items: catalogItems }: CateringFormProps) {
       return;
     }
 
-    toast.success(
-      `Request submitted! Number: ${result.data?.requestNumber}`,
-      {
-        duration: 8000,
-        icon: <MessageCircle className="h-4 w-4 text-green-soft" />,
-      },
-    );
+    toast.success(`Request submitted! Number: ${result.data?.requestNumber}`, {
+      duration: 8000,
+      icon: <MessageCircle className="h-4 w-4 text-green-soft" />,
+    });
 
     if (result.data?.whatsappUrl) {
-      window.open(result.data.whatsappUrl, "_blank", "noopener,noreferrer");
+      const { openWhatsApp } = await import("@/lib/whatsapp/open");
+      openWhatsApp({ url: result.data.whatsappUrl });
     }
 
     router.push(`/catering/request/${result.data?.requestNumber}`);
@@ -277,7 +283,9 @@ export function CateringForm({ items: catalogItems }: CateringFormProps) {
                   <span
                     className={cn(
                       "absolute left-[calc(50%+1rem)] top-4 hidden h-0.5 w-[calc(100%-2rem)] sm:block",
-                      step > stepItem.number ? "bg-green-soft" : "bg-green-soft/30",
+                      step > stepItem.number
+                        ? "bg-green-soft"
+                        : "bg-green-soft/30",
                     )}
                     aria-hidden="true"
                   />
@@ -320,7 +328,10 @@ export function CateringForm({ items: catalogItems }: CateringFormProps) {
                     })
                   }
                 >
-                  <SelectTrigger id="occasion" aria-invalid={Boolean(errors.occasion)}>
+                  <SelectTrigger
+                    id="occasion"
+                    aria-invalid={Boolean(errors.occasion)}
+                  >
                     <SelectValue placeholder="Select occasion" />
                   </SelectTrigger>
                   <SelectContent>
@@ -354,7 +365,10 @@ export function CateringForm({ items: catalogItems }: CateringFormProps) {
                   {sessionValues.map((value) => (
                     <div key={value} className="flex items-center gap-2">
                       <RadioGroupItem value={value} id={`session-${value}`} />
-                      <Label htmlFor={`session-${value}`} className="font-normal">
+                      <Label
+                        htmlFor={`session-${value}`}
+                        className="font-normal"
+                      >
                         {SESSION_LABELS[value]}
                       </Label>
                     </div>
@@ -412,10 +426,16 @@ export function CateringForm({ items: catalogItems }: CateringFormProps) {
                 <RadioGroup
                   value={dietPreference}
                   onValueChange={(value) => {
-                    setValue("dietPreference", value as CateringDietPreference, {
-                      shouldValidate: true,
+                    setValue(
+                      "dietPreference",
+                      value as CateringDietPreference,
+                      {
+                        shouldValidate: true,
+                      },
+                    );
+                    setValue("selectedMenuItems", [], {
+                      shouldValidate: false,
                     });
-                    setValue("selectedMenuItems", [], { shouldValidate: false });
                   }}
                   className="flex flex-wrap gap-4"
                 >
@@ -539,7 +559,9 @@ export function CateringForm({ items: catalogItems }: CateringFormProps) {
                   </div>
                   <div className="flex justify-between gap-4">
                     <dt>Guests</dt>
-                    <dd className="font-medium text-green-deep">{guestCount}</dd>
+                    <dd className="font-medium text-green-deep">
+                      {guestCount}
+                    </dd>
                   </div>
                   <div className="flex justify-between gap-4">
                     <dt>Menu items</dt>
@@ -609,7 +631,8 @@ export function CateringForm({ items: catalogItems }: CateringFormProps) {
 
               <div className="space-y-2">
                 <Label htmlFor="eventLocation">
-                  Event Location / Address <span className="text-orange">*</span>
+                  Event Location / Address{" "}
+                  <span className="text-orange">*</span>
                 </Label>
                 <Textarea
                   id="eventLocation"
@@ -625,7 +648,9 @@ export function CateringForm({ items: catalogItems }: CateringFormProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="specialInstructions">Special Instructions</Label>
+                <Label htmlFor="specialInstructions">
+                  Special Instructions
+                </Label>
                 <Textarea
                   id="specialInstructions"
                   placeholder="Any dietary restrictions, setup requirements, or notes..."

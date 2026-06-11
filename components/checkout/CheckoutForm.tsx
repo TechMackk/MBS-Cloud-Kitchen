@@ -89,7 +89,8 @@ export function CheckoutForm() {
     toast.success(`Order placed! Number: ${result.data?.orderNumber}`);
 
     if (result.data?.whatsappUrl) {
-      window.open(result.data.whatsappUrl, "_blank", "noopener,noreferrer");
+      const { openWhatsApp } = await import("@/lib/whatsapp/open");
+      openWhatsApp({ url: result.data.whatsappUrl });
     }
 
     router.push(`/order/${result.data?.orderNumber}`);
@@ -163,11 +164,7 @@ export function CheckoutForm() {
           />
         </div>
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={isSubmitting}
-        >
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
           {isSubmitting ? "Placing Order…" : "Place Order via WhatsApp"}
         </Button>
       </form>

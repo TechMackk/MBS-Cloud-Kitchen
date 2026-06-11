@@ -51,14 +51,12 @@ export function InquiryForm() {
         action: {
           label: "WhatsApp",
           onClick: () => {
-            window.open(
-              whatsappUrl(
-                CONTACT.whatsappOrdersRaw,
-                "Hi, I'd like to get in touch!",
-              ),
-              "_blank",
-              "noopener,noreferrer",
-            );
+            void import("@/lib/whatsapp/open").then(({ openWhatsApp }) => {
+              openWhatsApp({
+                phone: CONTACT.whatsappOrdersRaw,
+                message: "Hi, I'd like to get in touch!",
+              });
+            });
           },
         },
         icon: <MessageCircle className="h-4 w-4 text-green-soft" />,
@@ -168,7 +166,13 @@ export function InquiryForm() {
             )}
           </div>
 
-          <Button type="submit" variant="default" size="lg" className="w-full" disabled={isSubmitting}>
+          <Button
+            type="submit"
+            variant="default"
+            size="lg"
+            className="w-full"
+            disabled={isSubmitting}
+          >
             Send Message
           </Button>
 
@@ -179,8 +183,6 @@ export function InquiryForm() {
                 CONTACT.whatsappOrdersRaw,
                 "Hi, I'd like to get in touch!",
               )}
-              target="_blank"
-              rel="noopener noreferrer"
               className="inline-flex items-center gap-1 font-medium text-green-deep transition-colors hover:text-orange"
             >
               <MessageCircle className="h-4 w-4" aria-hidden="true" />

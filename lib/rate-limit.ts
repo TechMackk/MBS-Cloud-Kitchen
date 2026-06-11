@@ -19,7 +19,10 @@ type Limiter = {
   limit: (key: string) => Promise<RateLimitResult>;
 };
 
-const memoryStores = new Map<string, Map<string, { count: number; resetAt: number }>>();
+const memoryStores = new Map<
+  string,
+  Map<string, { count: number; resetAt: number }>
+>();
 const upstashLimiters = new Map<string, Ratelimit>();
 
 function parseWindowMs(window: WindowDuration): number {
@@ -33,9 +36,7 @@ function parseWindowMs(window: WindowDuration): number {
   }
 }
 
-function toUpstashWindow(
-  window: WindowDuration,
-): "1 m" | "15 m" | "1 h" {
+function toUpstashWindow(window: WindowDuration): "1 m" | "15 m" | "1 h" {
   switch (window) {
     case "1m":
       return "1 m";
@@ -46,7 +47,9 @@ function toUpstashWindow(
   }
 }
 
-function getMemoryStore(prefix: string): Map<string, { count: number; resetAt: number }> {
+function getMemoryStore(
+  prefix: string,
+): Map<string, { count: number; resetAt: number }> {
   let store = memoryStores.get(prefix);
   if (!store) {
     store = new Map();
@@ -194,9 +197,7 @@ export const webhookLimiter = createLimiter({
 });
 
 /** @deprecated Use chatLimiter.limit() */
-export async function checkChatRateLimit(
-  ip: string,
-): Promise<RateLimitResult> {
+export async function checkChatRateLimit(ip: string): Promise<RateLimitResult> {
   return chatLimiter.limit(ip);
 }
 
@@ -218,7 +219,6 @@ export async function checkLoginRateLimit(
 
   return emailResult;
 }
-
 export function getSessionMessageLimitValue(): number {
   return getSessionMessageLimit();
 }

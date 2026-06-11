@@ -18,7 +18,7 @@ export function CateringCTA() {
       aria-labelledby="catering-cta-heading"
     >
       <div
-        className="pointer-events-none absolute inset-0 royal-arch-pattern opacity-40"
+        className="royal-arch-pattern pointer-events-none absolute inset-0 opacity-40"
         aria-hidden="true"
       />
 
@@ -56,7 +56,7 @@ export function CateringCTA() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Link
                 href="/catering"
-                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl border border-gold-dark/35 bg-orange px-7 text-sm font-semibold text-white transition-colors hover:bg-orange-neon hover:shadow-[0_0_26px_rgba(212,175,55,0.40)] sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-2 focus-visible:ring-offset-royal-bg-secondary"
+                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl border border-gold-dark/35 bg-orange px-7 text-sm font-semibold text-white transition-colors hover:bg-orange-neon hover:shadow-[0_0_26px_rgba(212,175,55,0.40)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-2 focus-visible:ring-offset-royal-bg-secondary sm:w-auto"
               >
                 <span>Get Catering Quote</span>
                 <span aria-hidden="true">&rarr;</span>
@@ -67,9 +67,7 @@ export function CateringCTA() {
                   CONTACT.whatsappCateringRaw,
                   "Hi, I'd like to enquire about catering!",
                 )}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex h-12 w-full items-center justify-center rounded-2xl bg-[#25D366] px-7 text-sm font-semibold text-white transition-colors hover:bg-[#22c55e] sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-2 focus-visible:ring-offset-royal-bg-secondary"
+                className="inline-flex h-12 w-full items-center justify-center rounded-2xl bg-[#25D366] px-7 text-sm font-semibold text-white transition-colors hover:bg-[#22c55e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-2 focus-visible:ring-offset-royal-bg-secondary sm:w-auto"
               >
                 WhatsApp Catering
               </a>

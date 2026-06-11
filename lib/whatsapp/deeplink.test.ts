@@ -92,17 +92,19 @@ describe("buildCateringMessage", () => {
 });
 
 describe("deeplink URLs", () => {
-  it("encodes order message in wa.me URL", () => {
+  it("encodes order message in WhatsApp send URL", () => {
     const url = buildOrderLink(sampleOrder);
 
-    expect(url).toMatch(/^https:\/\/wa\.me\/\d+\?text=/);
-    expect(decodeURIComponent(url)).toContain("Chicken Biryani");
+    expect(url).toMatch(/^https:\/\/api\.whatsapp\.com\/send\?phone=\d+&text=/);
+    const text = new URL(url).searchParams.get("text") ?? "";
+    expect(text).toContain("Chicken Biryani");
   });
 
-  it("encodes catering message in wa.me URL", () => {
+  it("encodes catering message in WhatsApp send URL", () => {
     const url = buildCateringLink(sampleCateringRequest);
 
-    expect(url).toMatch(/^https:\/\/wa\.me\/\d+\?text=/);
-    expect(decodeURIComponent(url)).toContain("catering");
+    expect(url).toMatch(/^https:\/\/api\.whatsapp\.com\/send\?phone=\d+&text=/);
+    const text = new URL(url).searchParams.get("text") ?? "";
+    expect(text.toLowerCase()).toContain("catering");
   });
 });

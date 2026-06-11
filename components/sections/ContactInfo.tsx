@@ -60,7 +60,9 @@ export function ContactInfo() {
                 <MessageCircle className="h-6 w-6" />
               </div>
               <CardTitle>WhatsApp Us</CardTitle>
-              <CardDescription>Quick orders and catering enquiries</CardDescription>
+              <CardDescription>
+                Quick orders and catering enquiries
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
               <a
@@ -68,8 +70,6 @@ export function ContactInfo() {
                   CONTACT.whatsappOrdersRaw,
                   "Hi, I'd like to place an order!",
                 )}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="block text-sm font-medium text-green-deep transition-colors hover:text-orange"
                 aria-label={`WhatsApp orders: ${CONTACT.whatsappOrders}`}
               >
@@ -80,8 +80,6 @@ export function ContactInfo() {
                   CONTACT.whatsappCateringRaw,
                   "Hi, I'd like to enquire about catering!",
                 )}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="block text-sm font-medium text-green-deep transition-colors hover:text-orange"
                 aria-label={`WhatsApp catering: ${CONTACT.whatsappCatering}`}
               >
@@ -102,7 +100,7 @@ export function ContactInfo() {
               <CardDescription>Find us in Hyderabad</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <address className="not-italic text-sm leading-relaxed text-text/70">
+              <address className="text-sm not-italic leading-relaxed text-text/70">
                 {CONTACT.address}
               </address>
               <Button asChild variant="outline" size="sm">

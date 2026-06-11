@@ -82,7 +82,9 @@ export default async function CateringRequestDetailPage({
             </div>
             <div className="flex justify-between gap-4">
               <dt className="text-text/60">Occasion</dt>
-              <dd className="capitalize">{request.occasion.replace(/-/g, " ")}</dd>
+              <dd className="capitalize">
+                {request.occasion.replace(/-/g, " ")}
+              </dd>
             </div>
             <div className="flex justify-between gap-4">
               <dt className="text-text/60">Session</dt>
@@ -135,9 +137,7 @@ export default async function CateringRequestDetailPage({
         <CateringStatusActions request={request} />
         <div className="mt-4">
           <Button asChild variant="outline" size="sm">
-            <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-              Open in WhatsApp
-            </a>
+            <a href={whatsappLink}>Open in WhatsApp</a>
           </Button>
         </div>
       </section>

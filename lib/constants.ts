@@ -89,13 +89,7 @@ export const ABOUT_CARDS: AboutCard[] = [
   },
 ];
 
-export function whatsappUrl(phoneRaw: string, message?: string): string {
-  const base = `https://wa.me/${phoneRaw}`;
-  if (message) {
-    return `${base}?text=${encodeURIComponent(message)}`;
-  }
-  return base;
-}
+export { whatsappUrl } from "@/lib/whatsapp/links";
 
 export const FOOTER_QUICK_LINKS: NavLink[] = [
   { label: "Home", href: "/" },

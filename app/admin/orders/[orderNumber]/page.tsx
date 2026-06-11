@@ -123,11 +123,7 @@ export default async function OrderDetailPage({
             <OrderStatusActions order={order} />
             <div className="mt-4">
               <Button asChild variant="outline" size="sm">
-                <a
-                  href={whatsappLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={whatsappLink} rel="noopener noreferrer">
                   Open in WhatsApp
                 </a>
               </Button>
