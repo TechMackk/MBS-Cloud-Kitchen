@@ -4,11 +4,14 @@ import { SITE } from "@/lib/constants";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
+    id: "/",
     name: SITE.name,
     short_name: "MBS Kitchen",
     description: "Authentic Telangana specials, delivered fresh",
     start_url: "/",
     display: "standalone",
+    orientation: "portrait",
+    categories: ["food", "lifestyle", "shopping"],
     background_color: "#FFFFFF",
     theme_color: "#1F3A3D",
     icons: [
