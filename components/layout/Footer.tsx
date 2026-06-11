@@ -383,7 +383,7 @@ export function Footer() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <Link
-              href="#"
+              href="/privacy"
               className={cn(
                 "transition-colors",
                 isRoyalHome ? "hover:text-gold-light" : "hover:text-orange",
@@ -393,7 +393,7 @@ export function Footer() {
             </Link>
             <span aria-hidden="true">|</span>
             <Link
-              href="#"
+              href="/terms"
               className={cn(
                 "transition-colors",
                 isRoyalHome ? "hover:text-gold-light" : "hover:text-orange",
