@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useOptimistic, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -14,6 +13,7 @@ import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 import { FeaturedBadge } from "@/components/admin/FeaturedBadge";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { TableActions } from "@/components/admin/tables/TableActions";
+import { MenuItemImage } from "@/components/menu/MenuItemImage";
 import { VegBadge } from "@/components/menu/VegBadge";
 import { Switch } from "@/components/ui/switch";
 import { CATEGORY_LABELS } from "@/lib/data/categories";
@@ -130,7 +130,9 @@ export function MenuTable({ items, sort, order }: MenuTableProps) {
                   Name {sort === "name" ? `(${order})` : ""}
                 </button>
               </th>
-              <th className="px-4 py-3 font-medium text-green-deep">Category</th>
+              <th className="px-4 py-3 font-medium text-green-deep">
+                Category
+              </th>
               <th className="px-4 py-3 font-medium text-green-deep">Diet</th>
               <th className="px-4 py-3 font-medium text-green-deep">
                 <button
@@ -141,8 +143,12 @@ export function MenuTable({ items, sort, order }: MenuTableProps) {
                   Price {sort === "price" ? `(${order})` : ""}
                 </button>
               </th>
-              <th className="px-4 py-3 font-medium text-green-deep">Available</th>
-              <th className="px-4 py-3 font-medium text-green-deep">Featured</th>
+              <th className="px-4 py-3 font-medium text-green-deep">
+                Available
+              </th>
+              <th className="px-4 py-3 font-medium text-green-deep">
+                Featured
+              </th>
               <th className="px-4 py-3 font-medium text-green-deep">Actions</th>
             </tr>
           </thead>
@@ -151,12 +157,12 @@ export function MenuTable({ items, sort, order }: MenuTableProps) {
               <tr key={item.id} className={isPending ? "opacity-80" : ""}>
                 <td className="px-4 py-3">
                   <div className="relative h-14 w-14 overflow-hidden rounded-xl">
-                    <Image
+                    <MenuItemImage
                       src={item.imageUrl}
                       alt={item.name}
-                      fill
-                      className="object-cover"
                       sizes="56px"
+                      useBlurPlaceholder={false}
+                      className="object-cover"
                     />
                   </div>
                 </td>
