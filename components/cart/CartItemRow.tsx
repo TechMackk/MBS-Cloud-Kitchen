@@ -1,7 +1,6 @@
 "use client";
 
-import Image from "next/image";
-
+import { MenuItemImage } from "@/components/menu/MenuItemImage";
 import { QuantityControl } from "@/components/cart/QuantityControl";
 import type { CartItem } from "@/lib/cart/types";
 
@@ -19,12 +18,12 @@ export function CartItemRow({
   return (
     <li className="flex gap-3 border-b border-green-soft/10 py-4 last:border-0">
       <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl">
-        <Image
+        <MenuItemImage
           src={item.imageUrl}
           alt={item.name}
-          fill
-          className="object-cover"
           sizes="64px"
+          useBlurPlaceholder={false}
+          className="object-cover"
         />
       </div>
       <div className="min-w-0 flex-1">
@@ -34,9 +33,7 @@ export function CartItemRow({
             ₹{(item.price * item.quantity).toLocaleString("en-IN")}
           </p>
         </div>
-        <p className="mt-0.5 text-xs text-text/50">
-          ₹{item.price} each
-        </p>
+        <p className="mt-0.5 text-xs text-text/50">₹{item.price} each</p>
         <div className="mt-2 flex items-center justify-between">
           <QuantityControl
             quantity={item.quantity}

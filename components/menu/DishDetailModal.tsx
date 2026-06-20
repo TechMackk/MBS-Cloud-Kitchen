@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { CheckCircle2, Flame } from "lucide-react";
 
 import { DishQuantityStepper } from "@/components/cart/DishQuantityStepper";
+import { MenuItemImage } from "@/components/menu/MenuItemImage";
 import { VegBadge } from "@/components/menu/VegBadge";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +16,6 @@ import {
 import { showAddedToCartToast } from "@/lib/cart/toast";
 import { useCartStore } from "@/lib/cart/store";
 import type { MenuItem } from "@/lib/data/menu";
-import { IMAGE_BLUR_DATA_URL } from "@/lib/image-placeholder";
 import { getTagBadgeClasses } from "@/lib/menu/tags";
 import { cn } from "@/lib/utils";
 
@@ -72,13 +71,10 @@ export function DishDetailModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
         <div className="relative aspect-[16/10] overflow-hidden rounded-xl">
-          <Image
+          <MenuItemImage
             src={item.imageUrl}
             alt={item.name}
-            fill
             sizes="(max-width: 768px) 100vw, 672px"
-            placeholder="blur"
-            blurDataURL={IMAGE_BLUR_DATA_URL}
             className="object-cover"
           />
         </div>
@@ -157,7 +153,10 @@ export function DishDetailModal({
           </h3>
           <ul className="space-y-2">
             {item.prepNotes.map((note) => (
-              <li key={note} className="flex items-start gap-2 text-sm text-text/80">
+              <li
+                key={note}
+                className="flex items-start gap-2 text-sm text-text/80"
+              >
                 <CheckCircle2
                   className="mt-0.5 h-4 w-4 shrink-0 text-green-soft"
                   aria-hidden="true"

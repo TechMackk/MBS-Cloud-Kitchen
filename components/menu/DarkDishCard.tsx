@@ -1,13 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { Flame, Minus, Plus } from "lucide-react";
 
+import { MenuItemImage } from "@/components/menu/MenuItemImage";
 import { VegBadge } from "@/components/menu/VegBadge";
 import { showAddedToCartToast } from "@/lib/cart/toast";
 import { useCartStore } from "@/lib/cart/store";
 import type { MenuItem } from "@/lib/data/menu";
-import { IMAGE_BLUR_DATA_URL } from "@/lib/image-placeholder";
 import { cn } from "@/lib/utils";
 
 export interface DarkDishCardProps {
@@ -149,14 +148,12 @@ export function DarkDishCard({ item, priority = false }: DarkDishCardProps) {
       )}
     >
       <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
-        <Image
+        <MenuItemImage
           src={item.imageUrl}
           alt={item.name}
-          fill
           priority={priority}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          placeholder="blur"
-          blurDataURL={IMAGE_BLUR_DATA_URL}
+          placeholderClassName="bg-royal-bg-tertiary/60"
           className={cn(
             "object-cover transition-transform duration-500 group-hover:scale-[1.03]",
             !item.isAvailable && "grayscale",
@@ -222,7 +219,7 @@ export function DarkDishCard({ item, priority = false }: DarkDishCardProps) {
               type="button"
               disabled={!item.isAvailable}
               onClick={handleOrderNow}
-              className="flex h-10 w-full items-center justify-center rounded-2xl bg-[#2ecc71] text-sm font-semibold text-white transition-colors hover:bg-[#27ae60] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-2 focus-visible:ring-offset-royal-bg-secondary"
+              className="flex h-10 w-full items-center justify-center rounded-2xl bg-[#2ecc71] text-sm font-semibold text-white transition-colors hover:bg-[#27ae60] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-2 focus-visible:ring-offset-royal-bg-secondary disabled:cursor-not-allowed disabled:opacity-50"
             >
               {item.isAvailable ? "Order Now" : "Unavailable"}
             </button>

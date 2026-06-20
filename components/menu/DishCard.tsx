@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { Flame } from "lucide-react";
 
 import { DishQuantityStepper } from "@/components/cart/DishQuantityStepper";
+import { MenuItemImage } from "@/components/menu/MenuItemImage";
 import { VegBadge } from "@/components/menu/VegBadge";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +17,6 @@ import {
 import { showAddedToCartToast } from "@/lib/cart/toast";
 import { useCartStore } from "@/lib/cart/store";
 import type { MenuItem } from "@/lib/data/menu";
-import { IMAGE_BLUR_DATA_URL } from "@/lib/image-placeholder";
 import { getTagRibbonClasses } from "@/lib/menu/tags";
 import { cn } from "@/lib/utils";
 
@@ -121,14 +120,11 @@ export function DishCard({
       )}
     >
       <div className="relative aspect-[4/3] overflow-hidden">
-        <Image
+        <MenuItemImage
           src={item.imageUrl}
           alt={item.name}
-          fill
           priority={priority}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-          placeholder="blur"
-          blurDataURL={IMAGE_BLUR_DATA_URL}
           className={cn(
             "object-cover transition-transform duration-500 group-hover:scale-105",
             !item.isAvailable && "grayscale",

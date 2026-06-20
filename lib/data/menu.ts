@@ -1,11 +1,7 @@
 // SEED DATA ONLY. Public pages now read from DB. Edit menu items via /admin/menu.
 
 import type { DietType, MenuCategory } from "@/lib/data/categories";
-import { MENU_IMAGES } from "@/lib/data/menu-images";
-import {
-  buildPrepNotes,
-  getStarterVariant,
-} from "@/lib/data/menu-prep";
+import { buildPrepNotes, getStarterVariant } from "@/lib/data/menu-prep";
 
 export type { DietType, MenuCategory };
 
@@ -37,7 +33,7 @@ type ItemInput = {
   category: MenuCategory;
   diet: DietType;
   price: number;
-  imageUrl: string;
+  imageUrl?: string;
   isFeatured?: boolean;
   spiceLevel?: 1 | 2 | 3;
   servingSize?: string;
@@ -59,7 +55,7 @@ function item(input: ItemInput): MenuItem {
     category: input.category,
     diet: input.diet,
     price: input.price,
-    imageUrl: input.imageUrl,
+    imageUrl: input.imageUrl ?? "",
     isAvailable: true,
     isFeatured: input.isFeatured ?? false,
     spiceLevel: input.spiceLevel,
@@ -67,545 +63,396 @@ function item(input: ItemInput): MenuItem {
   };
 }
 
-const FRIED_RICE = [
+const STARTERS_FRY = [
   item({
-    slug: "egg-fried-rice",
-    name: "Egg Fried Rice",
-    description:
-      "Wok-tossed long-grain rice with scrambled egg, spring onion, and light soy.",
+    slug: "chicken-pakoda-bone",
+    name: "Chicken Pakoda (Bone)",
+    description: "Crispy bone-in chicken pakoda, Telangana-style.",
     longDescription:
-      "Classic Chinese-style egg fried rice made with premium long-grain rice, fresh eggs, and a touch of soy. Wok-tossed at high heat for that signature smoky flavour — a comforting meal on its own or paired with any starter.",
-    category: "fried-rice",
-    diet: "egg",
+      "Marinated bone-in chicken coated in spiced gram flour and deep-fried until golden and crunchy. A classic starter best enjoyed hot.",
+    category: "starter",
+    diet: "non-veg",
+    price: 130,
+    servingSize: "200g",
+  }),
+  item({
+    slug: "chicken-pakoda-boneless",
+    name: "Chicken Pakoda (Boneless)",
+    description: "Boneless chicken pakoda with a crisp, spiced coating.",
+    longDescription:
+      "Tender boneless chicken pieces marinated in house spices, battered, and fried to a crunchy finish. Perfect as a snack or side.",
+    category: "starter",
+    diet: "non-veg",
+    price: 200,
+    servingSize: "200g",
+  }),
+  item({
+    slug: "fried-chicken-leg-piece",
+    name: "Fried Chicken Leg Piece",
+    description: "Crispy fried chicken leg piece.",
+    longDescription:
+      "Juicy chicken leg pieces marinated and fried until golden and crisp. Order by piece — ideal as a quick snack or alongside rice.",
+    category: "starter",
+    diet: "non-veg",
+    price: 70,
+    servingSize: "₹70 (1 pc) / ₹130 (2 pcs)",
+  }),
+  item({
+    slug: "chicken-drumsticks",
+    name: "Chicken Drumsticks",
+    description: "Spiced and fried chicken drumsticks.",
+    longDescription:
+      "Flavorful chicken drumsticks marinated in South Indian spices and fried until crisp outside and juicy inside.",
+    category: "starter",
+    diet: "non-veg",
+    price: 70,
+    servingSize: "₹70 (1 pc) / ₹130 (2 pcs)",
+  }),
+  item({
+    slug: "chicken-wings",
+    name: "Chicken Wings",
+    description: "Crispy fried chicken wings.",
+    longDescription:
+      "Well-seasoned chicken wings fried to a golden crunch. A crowd-pleasing starter for sharing or solo indulgence.",
+    category: "starter",
+    diet: "non-veg",
+    price: 80,
+    servingSize: "₹80 (2 pcs) / ₹150 (4 pcs)",
+  }),
+  item({
+    slug: "fried-fish-boneless",
+    name: "Fried Fish (Boneless)",
+    description: "Boneless fish fillet, lightly spiced and fried crisp.",
+    longDescription:
+      "Fresh boneless fish marinated with mild spices and fried until golden. Clean, flaky, and satisfying.",
+    category: "starter",
+    diet: "non-veg",
     price: 120,
-    imageUrl: MENU_IMAGES.friedRice,
-    servingSize: "Serves 1",
-  }),
-  item({
-    slug: "double-egg-fried-rice",
-    name: "Double Egg Fried Rice",
-    description:
-      "Extra egg-loaded fried rice for a richer, protein-packed bowl.",
-    longDescription:
-      "Our egg fried rice elevated with double the eggs for a richer, fluffier texture. Same wok-tossed technique, same fresh oil — just more of the good stuff for egg lovers.",
-    category: "fried-rice",
-    diet: "egg",
-    price: 130,
-    imageUrl: MENU_IMAGES.friedRice,
-    servingSize: "Serves 1",
-  }),
-  item({
-    slug: "chicken-fried-rice",
-    name: "Chicken Fried Rice",
-    description:
-      "Tender chicken pieces tossed with fragrant rice and vegetables.",
-    longDescription:
-      "Juicy chicken strips wok-tossed with long-grain rice, carrots, beans, and spring onion. Seasoned with our house blend — hearty, satisfying, and made fresh to order.",
-    category: "fried-rice",
-    diet: "non-veg",
-    price: 150,
-    imageUrl: MENU_IMAGES.friedRice,
-    servingSize: "Serves 1",
-  }),
-  item({
-    slug: "veg-fried-rice",
-    name: "Veg Fried Rice",
-    description:
-      "Colourful vegetable fried rice with seasonal produce and mild seasoning.",
-    longDescription:
-      "A vibrant mix of seasonal vegetables wok-tossed with fragrant basmati rice. Light, wholesome, and packed with crunch — our most popular fried rice for everyday ordering.",
-    category: "fried-rice",
-    diet: "veg",
-    price: 140,
-    imageUrl: MENU_IMAGES.friedRice,
-    isFeatured: true,
-    servingSize: "Serves 1",
-  }),
-  item({
-    slug: "paneer-fried-rice",
-    name: "Paneer Fried Rice",
-    description:
-      "Soft paneer cubes with rice and peppers in a mildly spiced wok toss.",
-    longDescription:
-      "Creamy paneer cubes paired with colourful peppers and onions, wok-tossed with premium rice. A vegetarian favourite that delivers both protein and flavour in every bite.",
-    category: "fried-rice",
-    diet: "veg",
-    price: 190,
-    imageUrl: MENU_IMAGES.friedRice,
-    servingSize: "Serves 1",
-  }),
-  item({
-    slug: "prawns-fried-rice-with-egg",
-    name: "Prawns Fried Rice with Egg",
-    description:
-      "Fresh prawns and egg with rice — a seafood lover's fried rice special.",
-    longDescription:
-      "Succulent prawns and fluffy scrambled egg wok-tossed with long-grain rice and spring onion. Fresh seafood prepped same day, never frozen — a premium bowl for special cravings.",
-    category: "fried-rice",
-    diet: "non-veg",
-    price: 250,
-    imageUrl: MENU_IMAGES.prawns,
-    servingSize: "Serves 1",
   }),
 ];
 
-const RICE = [
+const PULAO_RICE = [
   item({
-    slug: "jeera-rice",
-    name: "Jeera Rice",
-    description:
-      "Fragrant basmati rice tempered with roasted cumin seeds and ghee.",
+    slug: "chicken-pulao",
+    name: "Chicken Pulao",
+    description: "Fragrant chicken pulao with aromatic basmati rice.",
     longDescription:
-      "Premium basmati rice cooked with ghee and roasted cumin seeds for an aromatic, fluffy side. The perfect companion to biryanis, curries, and Chinese mains alike.",
+      "Basmati rice cooked with tender chicken pieces and whole spices for a comforting, homestyle pulao.",
     category: "rice",
-    diet: "veg",
-    price: 130,
-    imageUrl: MENU_IMAGES.rice,
-    servingSize: "Serves 1",
-  }),
-];
-
-const NOODLES = [
-  item({
-    slug: "egg-noodles",
-    name: "Egg Noodles",
-    description: "Stir-fried noodles with egg, vegetables, and light seasoning.",
-    longDescription:
-      "Quality noodles wok-tossed with fresh egg and crisp vegetables. A quick, satisfying meal with the smoky wok flavour that defines good Chinese street food.",
-    category: "noodles",
-    diet: "egg",
-    price: 110,
-    imageUrl: MENU_IMAGES.noodles,
-    servingSize: "Serves 1",
+    diet: "non-veg",
+    price: 99,
+    isFeatured: true,
   }),
   item({
-    slug: "chicken-noodles",
-    name: "Chicken Noodles",
-    description: "Tender chicken with stir-fried noodles and mixed vegetables.",
+    slug: "special-chicken-pulao",
+    name: "Special Chicken Pulao",
+    description: "Premium chicken pulao with extra masala and garnish.",
     longDescription:
-      "Juicy chicken strips tossed with quality noodles and seasonal vegetables at high heat. Fresh oil, bold flavours, and a portion that hits the spot every time.",
-    category: "noodles",
+      "Our signature chicken pulao loaded with marinated chicken, fried onions, and aromatic spices — a house favourite.",
+    category: "rice",
     diet: "non-veg",
     price: 150,
-    imageUrl: MENU_IMAGES.noodles,
-    servingSize: "Serves 1",
+    isFeatured: true,
   }),
   item({
-    slug: "veg-noodles",
-    name: "Veg Noodles",
-    description: "Garden-fresh vegetables tossed with silky stir-fried noodles.",
+    slug: "chicken-fry-piece-pulao",
+    name: "Chicken Fry Piece Pulao",
+    description: "Pulao topped with crispy chicken fry pieces.",
     longDescription:
-      "A colourful medley of vegetables wok-tossed with quality noodles. Light, fresh, and full of texture — a vegetarian staple on our Chinese menu.",
-    category: "noodles",
-    diet: "veg",
-    price: 110,
-    imageUrl: MENU_IMAGES.noodles,
-    servingSize: "Serves 1",
-  }),
-  item({
-    slug: "paneer-noodles",
-    name: "Paneer Noodles",
-    description: "Soft paneer and noodles in a mildly spiced wok toss.",
-    longDescription:
-      "Creamy paneer cubes combined with stir-fried noodles and peppers. A hearty vegetarian option that balances protein with the comfort of classic Chinese noodles.",
-    category: "noodles",
-    diet: "veg",
-    price: 190,
-    imageUrl: MENU_IMAGES.noodles,
-    servingSize: "Serves 1",
-  }),
-  item({
-    slug: "prawns-noodles-with-egg",
-    name: "Prawns Noodles with Egg",
-    description: "Fresh prawns and egg with wok-tossed noodles.",
-    longDescription:
-      "Plump prawns and scrambled egg tossed with quality noodles at high heat. Seafood cleaned and prepped same day — never frozen, always fresh.",
-    category: "noodles",
+      "Fragrant pulao rice crowned with crunchy spiced chicken fry pieces for texture and bold flavour in every bite.",
+    category: "rice",
     diet: "non-veg",
-    price: 250,
-    imageUrl: MENU_IMAGES.prawns,
-    servingSize: "Serves 1",
-  }),
-  item({
-    slug: "chicken-65-noodles",
-    name: "Chicken 65 Noodles",
-    description: "Spicy Chicken 65 pieces tossed with stir-fried noodles.",
-    longDescription:
-      "Our fiery Chicken 65 combined with wok-tossed noodles for a fusion bowl that brings Hyderabad heat to Chinese comfort food. Bold, spicy, and unforgettable.",
-    category: "noodles",
-    diet: "non-veg",
-    price: 220,
-    imageUrl: MENU_IMAGES.noodles,
-    spiceLevel: 3,
-    servingSize: "Serves 1",
-  }),
-];
-
-const STARTERS = [
-  item({
-    slug: "veg-manchurian",
-    name: "Veg Manchurian",
-    description: "Crispy vegetable balls in tangy Indo-Chinese gravy.",
-    longDescription:
-      "Golden-fried vegetable dumplings tossed in a tangy, slightly sweet Manchurian sauce. A vegetarian classic that pairs perfectly with fried rice or noodles.",
-    category: "starter",
-    diet: "veg",
     price: 140,
-    imageUrl: MENU_IMAGES.vegStarter,
+  }),
+  item({
+    slug: "mutton-pulao",
+    name: "Mutton Pulao",
+    description: "Slow-cooked mutton pulao with rich, deep flavour.",
+    longDescription:
+      "Tender mutton pieces simmered with basmati rice and whole spices for a hearty, aromatic pulao.",
+    category: "rice",
+    diet: "non-veg",
+    price: 199,
+  }),
+  item({
+    slug: "special-mutton-pulao",
+    name: "Special Mutton Pulao",
+    description: "Premium mutton pulao with extra masala and garnish.",
+    longDescription:
+      "A richer take on mutton pulao with generous mutton pieces, fried onions, and our special spice blend.",
+    category: "rice",
+    diet: "non-veg",
+    price: 250,
     isFeatured: true,
-    spiceLevel: 2,
   }),
   item({
-    slug: "chicken-manchurian",
-    name: "Chicken Manchurian",
-    description: "Juicy chicken in signature tangy Manchurian sauce.",
+    slug: "special-gongura-kodi-pulao",
+    name: "Special Gongura Kodi Pulao",
+    description: "Tangy gongura chicken pulao — a Telangana specialty.",
     longDescription:
-      "Tender chicken pieces coated and fried, then tossed in our house Manchurian gravy — tangy, slightly sweet, and loaded with capsicum and spring onion.",
-    category: "starter",
+      "Chicken and rice cooked with tangy gongura (sorrel leaves) for a distinctive Andhra-Telangana flavour profile.",
+    category: "rice",
     diet: "non-veg",
-    price: 220,
-    imageUrl: MENU_IMAGES.chickenStarter,
-    isFeatured: true,
-    spiceLevel: 2,
+    price: 169,
   }),
   item({
-    slug: "pepper-chicken",
-    name: "Pepper Chicken",
-    description: "Black pepper-coated chicken with bold, aromatic heat.",
+    slug: "fried-fish-pulao",
+    name: "Fried Fish Pulao",
+    description: "Pulao served with crispy fried fish pieces.",
     longDescription:
-      "Chicken pieces stir-fried with crushed black pepper, curry leaves, and garlic. A dry starter with deep aroma and controlled heat — perfect as a side or snack.",
-    category: "starter",
+      "Aromatic basmati pulao paired with spiced fried fish for a satisfying rice-and-seafood combination.",
+    category: "rice",
     diet: "non-veg",
-    price: 220,
-    imageUrl: MENU_IMAGES.chickenStarter,
-    spiceLevel: 2,
+    price: 159,
   }),
   item({
-    slug: "chilli-chicken",
-    name: "Chilli Chicken",
-    description: "Crispy chicken tossed with onions and green chillies.",
+    slug: "mutton-liver-fry-pulao",
+    name: "Mutton Liver Fry Pulao",
+    description: "Pulao topped with spiced mutton liver fry.",
     longDescription:
-      "Classic Indo-Chinese chilli chicken — crispy fried chicken tossed with onions, capsicum, and green chillies in a spicy soy-ginger sauce.",
-    category: "starter",
+      "Fragrant pulao rice served with boldly spiced mutton liver fry — rich, earthy, and deeply flavourful.",
+    category: "rice",
     diet: "non-veg",
-    price: 220,
-    imageUrl: MENU_IMAGES.chickenStarter,
-    spiceLevel: 3,
-  }),
-  item({
-    slug: "chicken-65",
-    name: "Chicken 65",
-    description: "Hyderabad's iconic spicy, crispy fried chicken starter.",
-    longDescription:
-      "Marinated chicken deep-fried until crispy, then tossed with curry leaves, green chillies, and yogurt tempering. Hyderabad's most beloved starter — fiery, crunchy, and addictive.",
-    category: "starter",
-    diet: "non-veg",
-    price: 220,
-    imageUrl: MENU_IMAGES.chickenStarter,
-    isFeatured: true,
-    spiceLevel: 3,
-  }),
-  item({
-    slug: "chicken-majestic",
-    name: "Chicken Majestic",
-    description: "Creamy, mildly spiced chicken starter with Andhra flair.",
-    longDescription:
-      "Tender chicken strips in a rich, creamy marinade with subtle Andhra spices. A milder alternative to Chicken 65 that still delivers on flavour and texture.",
-    category: "starter",
-    diet: "non-veg",
-    price: 270,
-    imageUrl: MENU_IMAGES.chickenStarter,
-    spiceLevel: 2,
-  }),
-  item({
-    slug: "chilli-prawns",
-    name: "Chilli Prawns",
-    description: "Fresh prawns tossed with chillies and Indo-Chinese sauce.",
-    longDescription:
-      "Plump prawns stir-fried with onions, capsicum, and green chillies in a spicy sauce. Fresh seafood, never frozen — cleaned and prepped same day.",
-    category: "starter",
-    diet: "non-veg",
-    price: 279,
-    imageUrl: MENU_IMAGES.prawns,
-    spiceLevel: 3,
-  }),
-  item({
-    slug: "garlic-prawns",
-    name: "Garlic Prawns",
-    description: "Butter-garlic prawns with mild, aromatic seasoning.",
-    longDescription:
-      "Fresh prawns sautéed in butter and garlic with a hint of pepper. A milder seafood starter that lets the natural sweetness of prawns shine through.",
-    category: "starter",
-    diet: "non-veg",
-    price: 330,
-    imageUrl: MENU_IMAGES.prawns,
-    spiceLevel: 1,
-  }),
-  item({
-    slug: "loose-prawns",
-    name: "Loose Prawns",
-    description: "Spiced loose prawn preparation with Andhra-style masala.",
-    longDescription:
-      "Prawns cooked in a loose, flavourful masala with onions and curry leaves. A rustic seafood starter rooted in South Indian home cooking.",
-    category: "starter",
-    diet: "non-veg",
-    price: 330,
-    imageUrl: MENU_IMAGES.prawns,
-    spiceLevel: 2,
-  }),
-  item({
-    slug: "garlic-fish-boneless",
-    name: "Garlic Fish Boneless",
-    description: "Boneless fish fillets in butter-garlic sauce.",
-    longDescription:
-      "Tender boneless fish fillets sautéed in butter and garlic. Fresh fish, never frozen — a mild, aromatic starter for seafood lovers.",
-    category: "starter",
-    diet: "non-veg",
-    price: 260,
-    imageUrl: MENU_IMAGES.fish,
-    spiceLevel: 1,
-  }),
-  item({
-    slug: "chilli-fish-boneless",
-    name: "Chilli Fish Boneless",
-    description: "Crispy boneless fish with spicy Indo-Chinese coating.",
-    longDescription:
-      "Boneless fish pieces fried crisp and tossed with onions, capsicum, and green chillies. Fresh fish prepped same day with a fiery Indo-Chinese finish.",
-    category: "starter",
-    diet: "non-veg",
-    price: 260,
-    imageUrl: MENU_IMAGES.fish,
-    spiceLevel: 3,
-  }),
-  item({
-    slug: "gobi-manchurian",
-    name: "Gobi Manchurian",
-    description: "Crispy cauliflower florets in tangy Manchurian gravy.",
-    longDescription:
-      "Cauliflower florets battered, fried golden, and tossed in tangy Manchurian sauce. A vegetarian favourite with the perfect balance of crunch and sauce.",
-    category: "starter",
-    diet: "veg",
-    price: 160,
-    imageUrl: MENU_IMAGES.vegStarter,
-    spiceLevel: 2,
-  }),
-  item({
-    slug: "chilli-paneer",
-    name: "Chilli Paneer",
-    description: "Crispy paneer cubes tossed with peppers and spicy sauce.",
-    longDescription:
-      "Golden-fried paneer cubes tossed with onions, capsicum, and green chillies in a spicy Indo-Chinese sauce. A vegetarian staple with serious heat.",
-    category: "starter",
-    diet: "veg",
-    price: 220,
-    imageUrl: MENU_IMAGES.vegStarter,
-    spiceLevel: 3,
-  }),
-  item({
-    slug: "paneer-65",
-    name: "Paneer 65",
-    description: "Spicy, crispy fried paneer inspired by Chicken 65.",
-    longDescription:
-      "Paneer cubes marinated in our 65 spice blend, fried until crispy, and tossed with curry leaves and chillies. All the fire of Chicken 65, fully vegetarian.",
-    category: "starter",
-    diet: "veg",
-    price: 220,
-    imageUrl: MENU_IMAGES.vegStarter,
-    spiceLevel: 3,
-  }),
-  item({
-    slug: "baby-corn-manchurian",
-    name: "Baby Corn Manchurian",
-    description: "Crispy baby corn in classic Manchurian sauce.",
-    longDescription:
-      "Tender baby corn coated and fried, then tossed in tangy Manchurian gravy. A crunchy vegetarian starter with a satisfying sweet-spicy kick.",
-    category: "starter",
-    diet: "veg",
-    price: 219,
-    imageUrl: MENU_IMAGES.vegStarter,
-    spiceLevel: 2,
-  }),
-  item({
-    slug: "chilli-mushroom",
-    name: "Chilli Mushroom",
-    description: "Button mushrooms tossed with peppers and spicy sauce.",
-    longDescription:
-      "Fresh button mushrooms stir-fried with onions, capsicum, and green chillies. Earthy, spicy, and perfect alongside fried rice or noodles.",
-    category: "starter",
-    diet: "veg",
-    price: 210,
-    imageUrl: MENU_IMAGES.vegStarter,
-    spiceLevel: 2,
-  }),
-  item({
-    slug: "chicken-roast-with-batani",
-    name: "Chicken Roast with Batani",
-    description: "Roasted chicken with green peas in rustic Andhra style.",
-    longDescription:
-      "Chicken pieces slow-roasted with green peas (batani), onions, and Telangana spices. A homestyle starter that bridges Chinese menu favourites with local flavour.",
-    category: "starter",
-    diet: "non-veg",
-    price: 230,
-    imageUrl: MENU_IMAGES.chickenStarter,
-    spiceLevel: 2,
+    price: 199,
   }),
 ];
 
-const BIRYANI = [
+const NON_VEG_CURRIES_FRY = [
   item({
-    slug: "hyderabadi-chicken-dum-biryani-single",
-    name: "Hyderabadi Chicken Dum Biryani (Single)",
-    description:
-      "Single portion of authentic dum biryani with tender chicken and basmati rice.",
+    slug: "chicken-curry",
+    name: "Chicken Curry",
+    description: "Homestyle chicken curry with onion-tomato masala.",
     longDescription:
-      "Fragrant basmati rice layered with marinated chicken, fried onions, mint, and saffron — sealed and slow-cooked in the traditional dum style. Hyderabad's crown jewel in a single serving.",
-    category: "biryani",
+      "Tender chicken cooked in a spiced onion-tomato gravy — comforting, flavourful, and perfect with rice or roti.",
+    category: "curry",
+    diet: "non-veg",
+    price: 130,
+  }),
+  item({
+    slug: "chicken-liver-fry",
+    name: "Chicken Liver Fry",
+    description: "Spiced chicken liver fry with curry leaves and onions.",
+    longDescription:
+      "Chicken liver sautéed with onions, green chillies, and curry leaves for a bold, rustic Andhra-style fry.",
+    category: "curry",
+    diet: "non-veg",
+    price: 100,
+  }),
+  item({
+    slug: "mutton-liver-fry",
+    name: "Mutton Liver Fry",
+    description: "Rich mutton liver fry with aromatic spices.",
+    longDescription:
+      "Mutton liver cooked with onions and spices until tender — a traditional delicacy with deep, savoury flavour.",
+    category: "curry",
+    diet: "non-veg",
+    price: 200,
+  }),
+  item({
+    slug: "chicken-joints",
+    name: "Chicken Joints",
+    description: "Spiced chicken joint pieces, pan-fried or roasted.",
+    longDescription:
+      "Chicken joint pieces marinated in house spices and cooked until flavourful and tender.",
+    category: "curry",
+    diet: "non-veg",
+    price: 70,
+  }),
+  item({
+    slug: "garlic-chicken-fry",
+    name: "Garlic Chicken Fry",
+    description: "Chicken fry with bold garlic and pepper seasoning.",
+    longDescription:
+      "Chicken pieces tossed with generous garlic, pepper, and spices for an aromatic, dry-style fry.",
+    category: "curry",
+    diet: "non-veg",
+    price: 140,
+  }),
+  item({
+    slug: "egg-burji",
+    name: "Egg Burji",
+    description: "Scrambled eggs with onion, tomato, and spices.",
+    longDescription:
+      "Fluffy scrambled eggs cooked with onions, tomatoes, and mild spices — a quick, satisfying side or meal.",
+    category: "curry",
+    diet: "egg",
+    price: 70,
+  }),
+  item({
+    slug: "tomato-munagakaaya-egg-curry",
+    name: "Tomato Munagakaaya Egg Curry",
+    description: "Egg curry with tomato and drumstick (munagakaaya).",
+    longDescription:
+      "Boiled eggs simmered in a tangy tomato gravy with drumstick pieces — a homestyle Telangana favourite.",
+    category: "curry",
+    diet: "egg",
+    price: 60,
+  }),
+];
+
+const VEG_DAL_PACHADI = [
+  item({
+    slug: "tomato-pappu",
+    name: "Tomato Pappu",
+    description: "Telangana-style tomato dal tempered with spices.",
+    longDescription:
+      "Yellow lentils cooked with ripe tomatoes and tempered with mustard, cumin, and curry leaves.",
+    category: "curry",
+    diet: "veg",
+    price: 40,
+  }),
+  item({
+    slug: "pesara-pappu",
+    name: "Pesara Pappu",
+    description: "Green gram dal cooked with mild seasoning.",
+    longDescription:
+      "Moong dal simmered to a soft consistency and finished with a simple, aromatic tempering.",
+    category: "curry",
+    diet: "veg",
+    price: 40,
+  }),
+  item({
+    slug: "sambar",
+    name: "Sambar",
+    description: "South Indian sambar with vegetables and tamarind.",
+    longDescription:
+      "Classic sambar with mixed vegetables, tamarind, and sambar powder — pairs well with rice or idli.",
+    category: "curry",
+    diet: "veg",
+    price: 40,
+  }),
+  item({
+    slug: "tomato-chaaru",
+    name: "Tomato Chaaru",
+    description: "Light tomato rasam with pepper and tamarind.",
+    longDescription:
+      "A thin, tangy tomato chaaru (rasam) spiced with pepper and cumin — soothing and appetizing.",
+    category: "curry",
+    diet: "veg",
+    price: 40,
+  }),
+  item({
+    slug: "aloo-fry",
+    name: "Aloo Fry",
+    description: "Crispy pan-fried potato cubes with spices.",
+    longDescription:
+      "Potato cubes tossed with turmeric, chilli, and curry leaves until golden and crisp.",
+    category: "curry",
+    diet: "veg",
+    price: 50,
+  }),
+  item({
+    slug: "dondakaaya-fry",
+    name: "Dondakaaya Fry",
+    description: "Ivy gourd (dondakaaya) stir-fried with spices.",
+    longDescription:
+      "Fresh ivy gourd sliced and sautéed with onions and spices for a crunchy, homestyle vegetable fry.",
+    category: "curry",
+    diet: "veg",
+    price: 50,
+  }),
+  item({
+    slug: "tomato-pachadi",
+    name: "Tomato Pachadi",
+    description: "Fresh tomato chutney with tempering.",
+    longDescription:
+      "Ripe tomatoes ground into a tangy pachadi and finished with a mustard-curry leaf tempering.",
+    category: "curry",
+    diet: "veg",
+    price: 40,
+  }),
+  item({
+    slug: "gongura-pachadi",
+    name: "Gongura Pachadi",
+    description: "Tangy sorrel leaf chutney — Andhra classic.",
+    longDescription:
+      "Gongura (sorrel) leaves pounded into a sharp, tangy pachadi that pairs beautifully with rice and ghee.",
+    category: "curry",
+    diet: "veg",
+    price: 60,
+  }),
+  item({
+    slug: "cauliflower-tomato-koora",
+    name: "Cauliflower Tomato Koora",
+    description: "Cauliflower and tomato dry curry.",
+    longDescription:
+      "Cauliflower florets cooked with tomatoes and mild spices for a simple, wholesome vegetable koora.",
+    category: "curry",
+    diet: "veg",
+    price: 40,
+  }),
+];
+
+const BREADS_PARATHAS = [
+  item({
+    slug: "chapathi",
+    name: "Chapathi",
+    description: "Soft whole-wheat chapathi, freshly made.",
+    longDescription:
+      "Soft, lightly layered whole-wheat chapathi — ideal with curries, dal, or pachadi.",
+    category: "bread",
+    diet: "veg",
+    price: 15,
+  }),
+  item({
+    slug: "parathaa",
+    name: "Parathaa",
+    description: "Flaky layered parathaa, pan-roasted.",
+    longDescription:
+      "Golden parathaa with flaky layers, roasted on the tawa with a touch of ghee.",
+    category: "bread",
+    diet: "veg",
+    price: 20,
+  }),
+  item({
+    slug: "egg-parathaa",
+    name: "Egg Parathaa",
+    description: "Parathaa stuffed with spiced scrambled egg.",
+    longDescription:
+      "Flaky parathaa folded with seasoned egg filling — hearty and filling on its own.",
+    category: "bread",
+    diet: "egg",
+    price: 80,
+  }),
+  item({
+    slug: "chicken-parathaa",
+    name: "Chicken Parathaa",
+    description: "Parathaa stuffed with spiced minced chicken.",
+    longDescription:
+      "Soft parathaa packed with flavourful chicken keema-style filling — a satisfying meal in one.",
+    category: "bread",
+    diet: "non-veg",
+    price: 129,
+    isFeatured: true,
+  }),
+  item({
+    slug: "chicken-liver-fry-parathaa",
+    name: "Chicken Liver Fry Parathaa",
+    description: "Parathaa stuffed with chicken liver fry.",
+    longDescription:
+      "Parathaa filled with spiced chicken liver fry for a rich, bold flavour — a specialty wrap.",
+    category: "bread",
+    diet: "non-veg",
+    price: 100,
+  }),
+  item({
+    slug: "mutton-liver-fry-parathaa",
+    name: "Mutton Liver Fry Parathaa",
+    description: "Parathaa stuffed with mutton liver fry.",
+    longDescription:
+      "Flaky parathaa with a generous mutton liver fry filling — deep, savoury, and deeply satisfying.",
+    category: "bread",
     diet: "non-veg",
     price: 150,
-    imageUrl: MENU_IMAGES.biryani,
-    isFeatured: true,
-    spiceLevel: 2,
-    servingSize: "Single",
-  }),
-  item({
-    slug: "hyderabadi-chicken-dum-biryani-full",
-    name: "Hyderabadi Chicken Dum Biryani (Full)",
-    description: "Full portion dum biryani — ideal for sharing or a hearty meal.",
-    longDescription:
-      "A generous full portion of our signature Hyderabadi Chicken Dum Biryani. Layered rice and chicken slow-cooked with pure ghee and authentic spice blend — enough for two hungry appetites.",
-    category: "biryani",
-    diet: "non-veg",
-    price: 280,
-    imageUrl: MENU_IMAGES.biryani,
-    spiceLevel: 2,
-    servingSize: "Full",
-  }),
-  item({
-    slug: "hyderabadi-chicken-dum-biryani-family",
-    name: "Hyderabadi Chicken Dum Biryani (Family Pack)",
-    description: "Family pack dum biryani for gatherings and group orders.",
-    longDescription:
-      "Our largest portion of Hyderabadi Chicken Dum Biryani — perfect for family dinners and group orders. Same authentic dum technique, same premium ingredients, scaled for sharing.",
-    category: "biryani",
-    diet: "non-veg",
-    price: 540,
-    imageUrl: MENU_IMAGES.biryani,
-    spiceLevel: 2,
-    servingSize: "Family Pack",
-  }),
-  item({
-    slug: "garlic-chicken-fry-piece-biryani-single",
-    name: "Garlic Chicken Fry Piece Biryani (Single)",
-    description: "Dum biryani topped with crispy garlic chicken fry pieces.",
-    longDescription:
-      "Classic dum biryani elevated with crispy garlic chicken fry pieces on top. The crunch of fried chicken meets fragrant rice — a MBS signature combination.",
-    category: "biryani",
-    diet: "non-veg",
-    price: 160,
-    imageUrl: MENU_IMAGES.biryani,
-    spiceLevel: 2,
-    servingSize: "Single",
-  }),
-  item({
-    slug: "garlic-chicken-fry-piece-biryani-full",
-    name: "Garlic Chicken Fry Piece Biryani (Full)",
-    description: "Full portion biryani with generous garlic chicken fry topping.",
-    longDescription:
-      "A full portion of fragrant dum biryani crowned with a generous layer of garlic chicken fry pieces. Perfect for sharing when you want both rice and crispy chicken.",
-    category: "biryani",
-    diet: "non-veg",
-    price: 299,
-    imageUrl: MENU_IMAGES.biryani,
-    spiceLevel: 2,
-    servingSize: "Full",
-  }),
-  item({
-    slug: "garlic-chicken-fry-piece-biryani-family",
-    name: "Garlic Chicken Fry Piece Biryani (Family Pack)",
-    description: "Family pack with garlic chicken fry pieces over dum biryani.",
-    longDescription:
-      "Feed the whole family with our largest garlic chicken fry piece biryani. Dum-cooked rice with a mountain of crispy garlic chicken on top — a crowd-pleaser every time.",
-    category: "biryani",
-    diet: "non-veg",
-    price: 580,
-    imageUrl: MENU_IMAGES.biryani,
-    spiceLevel: 2,
-    servingSize: "Family Pack",
-  }),
-  item({
-    slug: "boneless-fish-biryani",
-    name: "Boneless Fish Biryani",
-    description: "Dum biryani with marinated boneless fish pieces.",
-    longDescription:
-      "Fragrant basmati rice layered with marinated boneless fish and slow-cooked in dum style. Fresh fish, never frozen — a seafood twist on the Hyderabadi classic.",
-    category: "biryani",
-    diet: "non-veg",
-    price: 249,
-    imageUrl: MENU_IMAGES.fish,
-    spiceLevel: 2,
-    servingSize: "Single",
-  }),
-  item({
-    slug: "prawns-biryani",
-    name: "Prawns Biryani",
-    description: "Aromatic dum biryani with succulent prawns.",
-    longDescription:
-      "Premium prawns marinated and layered with basmati rice, then dum-cooked with saffron and fried onions. Fresh seafood meets Hyderabadi tradition.",
-    category: "biryani",
-    diet: "non-veg",
-    price: 250,
-    imageUrl: MENU_IMAGES.prawns,
-    spiceLevel: 2,
-    servingSize: "Single",
-  }),
-  item({
-    slug: "paneer-biryani",
-    name: "Paneer Biryani",
-    description: "Vegetarian dum biryani with spiced paneer and basmati rice.",
-    longDescription:
-      "Soft paneer cubes marinated in aromatic spices, layered with basmati rice and dum-cooked. A vegetarian biryani that doesn't compromise on the authentic Hyderabadi experience.",
-    category: "biryani",
-    diet: "veg",
-    price: 170,
-    imageUrl: MENU_IMAGES.biryani,
-    spiceLevel: 2,
-    servingSize: "Single",
-  }),
-  item({
-    slug: "veg-biryani",
-    name: "Veg Biryani",
-    description: "Classic vegetable dum biryani with seasonal produce.",
-    longDescription:
-      "Seasonal vegetables layered with fragrant basmati rice and slow-cooked in the dum tradition. Wholesome, aromatic, and true to Hyderabadi roots — our vegetarian bestseller.",
-    category: "biryani",
-    diet: "veg",
-    price: 149,
-    imageUrl: MENU_IMAGES.biryani,
-    isFeatured: true,
-    spiceLevel: 1,
-    servingSize: "Single",
-  }),
-  item({
-    slug: "chicken-65-biryani",
-    name: "Chicken 65 Biryani",
-    description: "Dum biryani topped with spicy Chicken 65 pieces.",
-    longDescription:
-      "Fragrant dum biryani crowned with our fiery Chicken 65 pieces — a dramatic fusion of Hyderabadi tradition and bold South Indian spice.",
-    category: "biryani",
-    diet: "non-veg",
-    price: 179,
-    imageUrl: MENU_IMAGES.biryani,
-    spiceLevel: 3,
-    servingSize: "Single",
   }),
 ];
 
 export const MENU_ITEMS: MenuItem[] = [
-  ...FRIED_RICE,
-  ...RICE,
-  ...NOODLES,
-  ...STARTERS,
-  ...BIRYANI,
+  ...STARTERS_FRY,
+  ...PULAO_RICE,
+  ...NON_VEG_CURRIES_FRY,
+  ...VEG_DAL_PACHADI,
+  ...BREADS_PARATHAS,
 ];
 
 export function getFeaturedMenuItems(): MenuItem[] {
